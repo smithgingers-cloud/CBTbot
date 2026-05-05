@@ -5,7 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Your Space — Jackson's CBT Companion</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
-<style>
+<script>
+  const password = prompt("Enter password:");
+  if (password !== "freemymind") {
+    document.body.innerHTML = "<h1>Access Denied</h1>";
+  }
+</script>
+ <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
