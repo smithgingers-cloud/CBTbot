@@ -175,6 +175,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .st-btn.primary { background: var(–accent); color: white; border-color: transparent; }
 .st-msg { font-size: 12px; margin-top: 9px; min-height: 18px; }
 .st-msg.ok { color: var(–accent); } .st-msg.err { color: var(–coral); }
+.st-divider { border: none; border-top: 1px solid var(–border); margin: 16px 0; }
+.st-section { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(–text3); margin-bottom: 10px; }
+.st-export-row { display: flex; gap: 8px; }
+.st-export-info { font-size: 12px; color: var(–text3); line-height: 1.6; margin-bottom: 12px; }
+.st-import-drop {
+border: 1.5px dashed var(–border); border-radius: 10px; padding: 16px;
+text-align: center; font-size: 13px; color: var(–text3); cursor: pointer;
+transition: all 0.15s; background: var(–bg); margin-bottom: 8px;
+}
+.st-import-drop:hover, .st-import-drop.drag-over { border-color: var(–accent); background: rgba(74,107,90,0.05); color: var(–accent); }
+.st-import-drop input { display: none; }
 </style>
 
 </head>
@@ -377,6 +388,25 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <button class="st-btn primary" onclick="saveSettings()">Save</button>
     </div>
     <div class="st-msg" id="st-msg"></div>
+
+```
+<hr class="st-divider">
+<div class="st-section">Backup &amp; Restore</div>
+<div class="st-export-info">Export saves your memories, mood history, conversations &amp; streak to a <b>.json</b> file. Import restores from a previous export — memories and mood log are merged, conversations are replaced.</div>
+<div class="st-export-row">
+  <button class="st-btn" style="flex:1" onclick="exportData()">&#8659; Export backup</button>
+  <button class="st-btn" style="flex:1" onclick="document.getElementById('import-file').click()">&#8657; Import backup</button>
+</div>
+<div class="st-import-drop" id="import-drop"
+  ondragover="event.preventDefault();this.classList.add('drag-over')"
+  ondragleave="this.classList.remove('drag-over')"
+  ondrop="handleImportDrop(event)">
+  or drop a backup file here
+  <input type="file" id="import-file" accept=".json" onchange="handleImportFile(event)">
+</div>
+<div class="st-msg" id="import-msg"></div>
+```
+
   </div>
 </div>
 
@@ -654,6 +684,110 @@ async function clearAll(){
   ['jcbt_memories','jcbt_moods','jcbt_streak','jcbt_last_day'].forEach(k=>localStorage.removeItem(k));
   document.querySelectorAll('.mood-btn,.mo-mood-btn').forEach(b=>b.classList.remove('selected'));
   setStreak(0);renderMem();renderMoodHist();renderMsgs();closeOverlay();
+}
+</script>
+
+</body>
+</html>
+<script>
+// ── EXPORT ────────────────────────────────────────────────────────────────────
+function exportData(){
+  const payload = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    exportedBy: 'Jackson',
+    memories: memories,
+    moodLog: moodLog,
+    streak: streak,
+    lastDay: ls('jcbt_last_day') || null,
+    conversations: convos
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const date = new Date().toISOString().slice(0,10);
+  a.href = url; a.download = 'jackson-cbt-backup-' + date + '.json';
+  a.click(); URL.revokeObjectURL(url);
+  const msg = document.getElementById('st-msg');
+  msg.textContent = 'Backup downloaded!'; msg.className = 'st-msg ok';
+  setTimeout(function(){ msg.textContent = ''; }, 3000);
+}
+
+// ── IMPORT ────────────────────────────────────────────────────────────────────
+function handleImportDrop(e){
+e.preventDefault();
+document.getElementById(‘import-drop’).classList.remove(‘drag-over’);
+var file = e.dataTransfer.files[0];
+if(file) processImportFile(file);
+}
+function handleImportFile(e){
+var file = e.target.files[0];
+if(file) processImportFile(file);
+e.target.value = ‘’;
+}
+function processImportFile(file){
+var imsg = document.getElementById(‘import-msg’);
+if(!file.name.endsWith(’.json’)){
+imsg.textContent = ‘Please select a .json backup file.’;
+imsg.className = ‘st-msg err’; return;
+}
+var reader = new FileReader();
+reader.onload = function(e){
+try {
+var data = JSON.parse(e.target.result);
+if(!data.version || !data.exportedBy){ throw new Error(‘invalid’); }
+var dateLabel = data.exportedAt
+? new Date(data.exportedAt).toLocaleDateString(‘en-US’,{month:‘long’,day:‘numeric’,year:‘numeric’})
+: ‘unknown date’;
+if(!confirm(’Import backup from ’ + dateLabel + ‘?\n\nMemories and mood log will be merged with your current data. Conversations will be replaced.’)) return;
+
+```
+  // Merge memories (deduplicate)
+  var mergedMem = [];
+  var seen = {};
+  memories.concat(data.memories||[]).forEach(function(m){
+    if(!seen[m]){ seen[m]=true; mergedMem.push(m); }
+  });
+  memories = mergedMem.slice(-40);
+  ls('jcbt_memories', memories);
+
+  // Merge mood log (newest entry per day wins)
+  var moodMap = {};
+  moodLog.concat(data.moodLog||[]).forEach(function(m){
+    var day = new Date(m.date).toDateString();
+    if(!moodMap[day] || m.date > moodMap[day].date) moodMap[day] = m;
+  });
+  moodLog = Object.values(moodMap).sort(function(a,b){return a.date-b.date;});
+  ls('jcbt_moods', moodLog);
+
+  // Replace conversations (strip mode-check)
+  if(data.conversations){
+    convos = Object.assign({orchestrator:[],thought:[],anxiety:[],activation:[]}, data.conversations);
+    Object.keys(convos).forEach(function(k){
+      convos[k] = convos[k].filter(function(m){ return m.type !== 'mode-check'; });
+    });
+  }
+
+  // Restore streak if imported one is higher
+  if((data.streak||0) > streak){
+    streak = data.streak;
+    ls('jcbt_streak', streak);
+    if(data.lastDay) ls('jcbt_last_day', data.lastDay);
+    setStreak(streak);
+  }
+
+  renderMem(); renderMoodHist(); renderMsgs();
+  imsg.textContent = 'Backup restored successfully!';
+  imsg.className = 'st-msg ok';
+  setTimeout(function(){ imsg.textContent = ''; }, 3000);
+} catch(err) {
+  imsg.textContent = "Could not read that file. Make sure it's a valid Jackson CBT backup.";
+  imsg.className = 'st-msg err';
+}
+```
+
+};
+reader.readAsText(file);
 }
 </script>
 
