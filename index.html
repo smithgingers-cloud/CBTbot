@@ -29,6 +29,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .auth-input:focus { border-color: rgba(74,107,90,0.5); }
 .auth-btn { width: 100%; padding: 13px; border-radius: 10px; border: none; background: var(–accent); color: white; font-family: ‘DM Sans’, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s; margin-top: 4px; }
 .auth-btn:hover { background: var(–accent-h); }
+.auth-btn:active { background: var(–accent-h); transform: scale(0.98); }
 .auth-err { font-size: 12px; color: var(–coral); margin-top: 9px; min-height: 18px; }
 .auth-link { font-size: 12px; color: var(–text3); text-align: center; margin-top: 14px; cursor: pointer; }
 .auth-link span { color: var(–accent); text-decoration: underline; }
@@ -56,6 +57,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .sb-sec { padding: 14px 18px 5px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(–text3); }
 .bot-btn { display: flex; align-items: center; gap: 10px; padding: 10px 18px; cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: background 0.15s; border-left: 2px solid transparent; }
 .bot-btn:hover { background: var(–bg2); }
+.bot-btn:active { background: var(–bg3); }
 .bot-btn.active { background: var(–bg2); border-left-color: var(–accent); }
 .bot-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .bot-btn-name { font-size: 13px; font-weight: 500; color: var(–text); display: block; }
@@ -65,6 +67,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .mood-strip { display: flex; gap: 5px; }
 .mood-btn { flex: 1; padding: 6px 0; border: 1px solid var(–border); border-radius: 7px; background: var(–bg2); cursor: pointer; font-size: 15px; text-align: center; transition: all 0.15s; line-height: 1; }
 .mood-btn:hover { background: var(–bg3); }
+.mood-btn:active { background: var(–bg3); transform: scale(0.93); }
 .mood-btn.selected { border-color: var(–accent); background: rgba(74,107,90,0.12); }
 
 /* MAIN */
@@ -91,7 +94,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 @media (min-width: 700px) { .msg { max-width: 74%; } }
 .msg-av { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: white; }
 .msg-bub { padding: 11px 14px; border-radius: 15px; font-size: 14px; line-height: 1.7; color: var(–text); }
-.msg.user .msg-bub { background: var(–accent); color: white; border-bottom-right-radius: 4px; }
+.msg.user .msg-bub { background: var(–bg3); color: var(–text); border-bottom-right-radius: 4px; border: 1px solid var(–border); }
 .msg.assistant .msg-bub { background: var(–surface); border: 1px solid var(–border); border-bottom-left-radius: 4px; }
 
 .typing-wrap { display: flex; align-items: center; gap: 9px; align-self: flex-start; animation: fadeUp 0.2s ease; }
@@ -105,13 +108,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .mode-check-btns { display: flex; gap: 7px; margin-top: 11px; justify-content: center; flex-wrap: wrap; }
 .mode-check-btn { padding: 7px 13px; border-radius: 20px; border: 1px solid var(–border); background: var(–bg2); cursor: pointer; font-size: 12px; font-weight: 500; font-family: ‘DM Sans’, sans-serif; color: var(–text2); transition: all 0.15s; }
 .mode-check-btn:hover { background: var(–bg3); }
+.mode-check-btn:active { background: var(–bg3); transform: scale(0.95); }
 
 .welcome { align-self: center; text-align: center; padding: 30px 18px; max-width: 390px; animation: fadeUp 0.3s ease; }
 .welcome h2 { font-family: ‘Lora’, serif; font-size: 24px; font-weight: 500; margin-bottom: 9px; }
 .welcome p { font-size: 14px; color: var(–text2); line-height: 1.7; }
 .starters { display: flex; flex-direction: column; gap: 7px; margin-top: 20px; }
 .starter { padding: 11px 15px; border: 1px solid var(–border); border-radius: 10px; background: var(–surface); cursor: pointer; font-size: 13px; font-family: ‘DM Sans’, sans-serif; color: var(–text2); text-align: left; transition: all 0.15s; line-height: 1.5; }
-.starter:active { background: var(–bg2); }
+.starter:hover { background: var(–bg2); }
+.starter:active { background: var(–bg3); transform: scale(0.98); }
 
 /* INPUT */
 #input-area { padding: 10px 13px 14px; background: var(–surface); border-top: 1px solid var(–border); flex-shrink: 0; }
@@ -144,6 +149,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 #mobile-nav::-webkit-scrollbar { display: none; }
 @supports (padding-bottom: env(safe-area-inset-bottom)) { #mobile-nav { padding-bottom: max(0px, calc(env(safe-area-inset-bottom) - 6px)); } }
 .mnav-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 14px; border: none; background: none; cursor: pointer; font-family: ‘DM Sans’, sans-serif; flex-shrink: 0; border-top: 2px solid transparent; transition: all 0.15s; }
+.mnav-btn:active { background: var(–bg2); }
 .mnav-btn.active { border-top-color: var(–accent); }
 .mnav-dot { width: 7px; height: 7px; border-radius: 50%; }
 .mnav-label { font-size: 10px; color: var(–text3); white-space: nowrap; }
@@ -158,6 +164,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .mo-body { flex: 1; overflow-y: auto; padding: 20px 18px; display: flex; flex-direction: column; gap: 22px; -webkit-overflow-scrolling: touch; }
 .mo-mood-strip { display: flex; gap: 8px; }
 .mo-mood-btn { flex: 1; padding: 12px 0; border: 1px solid var(–border); border-radius: 10px; background: var(–bg2); cursor: pointer; font-size: 22px; text-align: center; transition: all 0.15s; }
+.mo-mood-btn:active { background: var(–bg3); transform: scale(0.93); }
 .mo-mood-btn.selected { border-color: var(–accent); background: rgba(74,107,90,0.12); }
 
 /* SETTINGS SHEET */
@@ -172,7 +179,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .st-input:focus { border-color: rgba(74,107,90,0.5); }
 .st-row { display: flex; gap: 8px; margin-top: 4px; }
 .st-btn { flex: 1; padding: 11px; border-radius: 9px; border: 1px solid var(–border); background: var(–bg2); cursor: pointer; font-family: ‘DM Sans’, sans-serif; font-size: 13px; font-weight: 500; color: var(–text2); transition: all 0.15s; }
+.st-btn:active { transform: scale(0.97); opacity: 0.85; }
 .st-btn.primary { background: var(–accent); color: white; border-color: transparent; }
+.st-btn.primary:active { background: var(–accent-h); }
 .st-msg { font-size: 12px; margin-top: 9px; min-height: 18px; }
 .st-msg.ok { color: var(–accent); } .st-msg.err { color: var(–coral); }
 .st-divider { border: none; border-top: 1px solid var(–border); margin: 16px 0; }
@@ -637,7 +646,7 @@ function closeOverlay(){document.getElementById('mobile-overlay').classList.remo
 async function extractMem(userMsg,botReply){
   if(!apiKey)return;
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:`Extract 0-2 short memory notes from this therapy exchange for 's CBT app. Focus on: recurring patterns, triggers, things that help them, values, significant events. Return ONLY a JSON array of strings under 12 words each. Example: ["Catastrophizes about work deadlines","Running lifts their mood"]. If nothing to save: []`,messages:[{role:'user',content:`User: "${userMsg}"\nBot: "${botReply}"`}]})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:300,system:`Extract 0-2 short memory notes from this therapy exchange for 's CBT app. Focus on: recurring patterns, triggers, things that help them, values, significant events. Return ONLY a JSON array of strings under 12 words each. Example: ["Catastrophizes about work deadlines","Running lifts their mood"]. If nothing to save: []`,messages:[{role:'user',content:`User: "${userMsg}"\nBot: "${botReply}"`}]})});
     const data=await res.json(), raw=(data.content?.[0]?.text||'[]').replace(/```json|```/g,'').trim();
     const extracted=JSON.parse(raw);
     if(Array.isArray(extracted)&&extracted.length){memories.push(...extracted);if(memories.length>40)memories=memories.slice(-40);ls('jcbt_memories',memories);renderMem();}
@@ -657,7 +666,7 @@ function buildCtx(){
 async function callAPI(userText){
   if(!apiKey)throw new Error('NO_KEY');
   const bot=getBots()[currentBot];
-  const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:bot.system+buildCtx(),messages:convos[currentBot].filter(m=>m.role==='user'||m.role==='assistant').slice(-20).map(m=>({role:m.role,content:m.content}))})});
+  const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,system:bot.system+buildCtx(),messages:convos[currentBot].filter(m=>m.role==='user'||m.role==='assistant').slice(-20).map(m=>({role:m.role,content:m.content}))})});
   const data=await res.json();
   if(data.error)throw new Error(data.error.message);
   return data.content?.[0]?.text||'Something went wrong.';
