@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Your Space — Jackson</title>
+<title>Your Space — CBT Companion</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -196,7 +196,7 @@ transition: all 0.15s; background: var(–bg); margin-bottom: 8px;
 <div class="screen" id="lock-screen">
   <div class="auth-card">
     <div class="auth-logo">Your Space</div>
-    <div class="auth-sub">CBT Companion · Jackson</div>
+    <div class="auth-sub">CBT Companion</div>
     <div class="auth-label">Password</div>
     <input class="auth-input" type="password" id="lock-pw" placeholder="Enter your password" onkeydown="if(event.key==='Enter')unlock()">
     <button class="auth-btn" onclick="unlock()">Open my space</button>
@@ -209,8 +209,10 @@ transition: all 0.15s; background: var(–bg); margin-bottom: 8px;
 
 <div class="screen hidden" id="setup-screen">
   <div class="auth-card">
-    <div class="auth-logo">Welcome, Jackson.</div>
+    <div class="auth-logo" id="setup-logo">Welcome.</div>
     <div class="auth-sub">One-time setup</div>
+    <div class="auth-label">Your first name</div>
+    <input class="auth-input" type="text" id="setup-name" placeholder="e.g. Jackson" autocomplete="given-name" oninput="updateWelcome(this.value)">
     <div class="auth-hint">
       <b>API Key</b> — get yours free at <b>platform.anthropic.com</b> under API Keys. It never leaves your device.
     </div>
@@ -235,7 +237,7 @@ transition: all 0.15s; background: var(–bg); margin-bottom: 8px;
   <div id="sidebar">
     <div class="sb-header">
       <div class="app-name">Your Space</div>
-      <div class="app-sub">CBT · Jackson</div>
+      <div class="app-sub" id="sidebar-sub">CBT</div>
     </div>
     <div class="sb-sec">Specialists</div>
     <button class="bot-btn active" data-bot="orchestrator" onclick="switchBot('orchestrator')">
@@ -282,7 +284,7 @@ transition: all 0.15s; background: var(–bg); margin-bottom: 8px;
     <div id="messages"></div>
     <div id="input-area">
       <div class="input-row">
-        <textarea id="user-input" placeholder="Talk to me, Jackson..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <textarea id="user-input" id="input-placeholder" placeholder="Talk to me..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
         <button id="send-btn" onclick="sendMessage()">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2 8L14 2L8 14L7 9L2 8Z" fill="white" stroke="white" stroke-width="1.2" stroke-linejoin="round"/></svg>
         </button>
@@ -419,6 +421,12 @@ async function hashPw(pw) {
 function ls(k,v){ if(v===undefined){try{const r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch(e){return null;}} try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
 
 let apiKey='';
+let userName='';
+
+function updateWelcome(val){
+  const n=val.trim();
+  document.getElementById('setup-logo').textContent = n ? 'Welcome, '+n+'.' : 'Welcome.';
+}
 
 async function unlock(){
   const pw=document.getElementById('lock-pw').value; if(!pw)return;
@@ -426,17 +434,23 @@ async function unlock(){
   if(!stored){showSetup();return;}
   const h=await hashPw(pw);
   if(h!==stored){document.getElementById('lock-err').textContent='Wrong password.';return;}
-  apiKey=ls('jcbt_apikey')||''; launchApp();
+  apiKey=ls('jcbt_apikey')||'';
+  userName=ls('jcbt_username')||'friend';
+  launchApp();
 }
 async function doSetup(){
+  const name=document.getElementById('setup-name').value.trim();
   const key=document.getElementById('setup-key').value.trim();
   const pw1=document.getElementById('setup-pw1').value;
   const pw2=document.getElementById('setup-pw2').value;
   const err=document.getElementById('setup-err');
+  if(!name){err.textContent='Please enter your first name.';return;}
   if(!key.startsWith('sk-ant-')&&key){err.textContent='API key should start with sk-ant-';return;}
   if(pw1.length<4){err.textContent='Password must be at least 4 characters.';return;}
   if(pw1!==pw2){err.textContent="Passwords don't match.";return;}
-  const h=await hashPw(pw1); ls('jcbt_pwhash',h); ls('jcbt_apikey',key); apiKey=key; launchApp();
+  const h=await hashPw(pw1);
+  ls('jcbt_pwhash',h); ls('jcbt_apikey',key); ls('jcbt_username',name);
+  apiKey=key; userName=name; launchApp();
 }
 function showSetup(){document.getElementById('lock-screen').classList.add('hidden');document.getElementById('setup-screen').classList.remove('hidden');}
 function showLock(){document.getElementById('setup-screen').classList.add('hidden');document.getElementById('lock-screen').classList.remove('hidden');}
@@ -464,51 +478,57 @@ function launchApp(){
   document.getElementById('lock-screen').classList.add('hidden');
   document.getElementById('setup-screen').classList.add('hidden');
   document.getElementById('app').classList.add('visible');
+  document.getElementById('sidebar-sub').textContent = 'CBT · ' + userName;
+  document.getElementById('user-input').placeholder = 'Talk to me, ' + userName + '...';
+  document.title = 'Your Space — ' + userName;
   loadAll();
 }
 
 // ── BOT CONFIGS ───────────────────────────────────────────────────────────────
-const BOTS = {
-  orchestrator:{name:'Main',desc:'Your guide',color:'#4a6b5a',initial:'M',system:`You are Jackson's personal CBT companion. Jackson is the only person who uses this app.
+function getBots(){
+  const n = userName || 'you';
+  const his = 'their'; // gender-neutral
+  return {
+  orchestrator:{name:'Main',desc:'Your guide',color:'#4a6b5a',initial:'M',system:`You are ${n}'s personal CBT companion. ${n} is the only person who uses this app. Their name is ${n}.
 
-PERSONALITY: Warm, calm, utterly unshakeable. No matter what Jackson brings — a breakdown, dark thoughts, frustration, a boring day — you don't flinch, don't get clinical and cold. You speak like a real perceptive person, not a chatbot.
+PERSONALITY: Warm, calm, utterly unshakeable. No matter what ${n} brings — a breakdown, dark thoughts, frustration, a boring day — you don't flinch, don't get clinical and cold. You speak like a real perceptive person, not a chatbot.
 
-TONE: Conversational and warm. Natural language, contractions, short sentences when the moment calls for it. Never bullet points or numbered lists — flowing natural prose. Don't start with "Absolutely!", "Of course!", "Great question!" or hollow affirmations.
+TONE: Conversational and warm. Natural language, contractions, short sentences when the moment calls for it. Never bullet points or numbered lists — flowing natural prose. Don't start with "Absolutely!", "Of course!", "Great question!" or hollow affirmations. Use ${n}'s name occasionally but naturally — not in every message.
 
 THREE MODES — shift fluidly:
 1. THERAPIST MODE: Structured CBT — thought records, cognitive restructuring, worry management, behavioral activation. Rigorous but warm.
-2. SUPPORT MODE: Just being present. Validate, reflect, don't push advice or silver linings. Sit with him in hard feelings.
+2. SUPPORT MODE: Just being present. Validate, reflect, don't push advice or silver linings. Sit with ${n} in hard feelings.
 3. FRIEND MODE: Casual, warm, even a little funny if the moment calls for it. A real conversation.
 
-CRITICAL — THE CHECK-IN: When Jackson shares something difficult WITHOUT explicitly asking for CBT help, ALWAYS gently check in. "Do you want to just talk this through, or would it help to actually work through it together?" Never assume he wants an exercise.
+CRITICAL — THE CHECK-IN: When ${n} shares something difficult WITHOUT explicitly asking for CBT help, ALWAYS gently check in. "Do you want to just talk this through, or would it help to actually work through it together?" Never assume they want an exercise.
 
-MOOD AWARENESS: Use Jackson's memory and mood history. If his tone seems quieter, sharper, or more withdrawn than usual, gently notice — "You seem a little quieter than usual today — how are you actually doing?"
+MOOD AWARENESS: Use ${n}'s memory and mood history. If ${his} tone seems quieter, sharper, or more withdrawn than usual, gently notice — "You seem a little quieter than usual today — how are you actually doing?"
 
 SPECIALIST ROUTING: When appropriate, suggest a specialist — always ask first:
 - Thought work: rumination, self-critical thoughts, cognitive distortions
 - Anxiety: worry, fear, anxious spiraling
 - Activation: low motivation, avoidance, depression-related inactivity
 
-MEMORY: Use Jackson's history. Reference things he's mentioned before. Don't make him repeat himself.
+MEMORY: Use ${n}'s history. Reference things they've mentioned before. Don't make them repeat themselves.
 NEVER: Use clinical jargon without explaining. Give unsolicited advice when venting. Be chipper or performatively positive. Use bullet points.`},
-  thought:{name:'Thought work',desc:'Cognitive restructuring',color:'#5b8c7a',initial:'T',system:`You are Jackson's Thought Challenger — CBT specialist in cognitive restructuring. Jackson is the only user.
+  thought:{name:'Thought work',desc:'Cognitive restructuring',color:'#5b8c7a',initial:'T',system:`You are ${n}'s Thought Challenger — CBT specialist in cognitive restructuring. ${n} is the only user.
 
-PERSONALITY: Warm, calm, deeply curious. You help when his mind is being unkind. You ask questions that help him see things differently — never tell him what to think.
+PERSONALITY: Warm, calm, deeply curious. You help when ${his} mind is being unkind. You ask questions that help them see things differently — never tell them what to think.
 
 YOUR SPECIALTY — the CBT thought record, warmly, one step at a time:
 1. Situation — what happened, just the facts
 2. Automatic thought — exact first thought, verbatim if possible
-3. Emotion & intensity — what he felt and how strong (0-100)
+3. Emotion & intensity — what they felt and how strong (0-100)
 4. Cognitive distortions — gently name what you notice: all-or-nothing, catastrophizing, mind-reading, fortune-telling, personalization, should statements
 5. Evidence for and against the thought
 6. Balanced thought — a more accurate, compassionate alternative
-7. Re-rate the emotion — how does he feel now?
+7. Re-rate the emotion — how do they feel now?
 
-APPROACH: Never rush. One step at a time. If not ready for a full record, just explore conversationally. The structure serves him. Always check what he needs first.
+APPROACH: Never rush. One step at a time. If not ready for a full record, just explore conversationally. The structure serves ${n}. Always check what they need first.
 TONE: Natural flowing prose. No bullet points. Warm and genuinely curious.`},
-  anxiety:{name:'Anxiety',desc:'Worry management',color:'#c4634a',initial:'A',system:`You are Jackson's Anxiety Coach — CBT specialist in worry management and anxiety. Jackson is the only user.
+  anxiety:{name:'Anxiety',desc:'Worry management',color:'#c4634a',initial:'A',system:`You are ${n}'s Anxiety Coach — CBT specialist in worry management and anxiety. ${n} is the only user.
 
-PERSONALITY: Warm, grounding, steady. When Jackson is anxious or spiraling, you are the anchor. Never minimize and never amplify. Help him find solid ground.
+PERSONALITY: Warm, grounding, steady. When ${n} is anxious or spiraling, you are the anchor. Never minimize and never amplify. Help them find solid ground.
 
 YOUR TOOLKIT:
 WORRY TREE: Actionable now? Yes → small concrete plan. No → worry postponement.
@@ -517,22 +537,23 @@ GROUNDING (5-4-3-2-1): 5 things you see, 4 you touch, 3 you hear, 2 you smell, 1
 DECATASTROPHIZING: "What's the worst that could realistically happen? And if it did — could you handle it?"
 EXPOSURE AWARENESS: If avoidance is a pattern, gently name it and explore one small step.
 
-APPROACH: First, meet him where he is. "That sounds really overwhelming. Tell me what's going on." Then offer a tool if helpful — and ask first.
+APPROACH: First, meet them where they are. "That sounds really overwhelming. Tell me what's going on." Then offer a tool if helpful — and ask first.
 TONE: Natural flowing prose. No lists. Grounding and present.`},
-  activation:{name:'Activation',desc:'Motivation & behavior',color:'#c49a3a',initial:'AC',system:`You are Jackson's Activation Coach — CBT specialist in behavioral activation and motivation. Jackson is the only user.
+  activation:{name:'Activation',desc:'Motivation & behavior',color:'#c49a3a',initial:'AC',system:`You are ${n}'s Activation Coach — CBT specialist in behavioral activation and motivation. ${n} is the only user.
 
-PERSONALITY: Warm, encouraging without being a cheerleader. You understand telling someone with low motivation to "just do it" is useless. You meet Jackson where he is.
+PERSONALITY: Warm, encouraging without being a cheerleader. You understand telling someone with low motivation to "just do it" is useless. You meet ${n} where they are.
 
 YOUR TOOLKIT:
-ACTIVITY SCHEDULING: Small, meaningful activities tied to his values. One or two things, not a packed schedule.
-MOOD-ACTIVITY CONNECTION: Help him see the link between behavior and mood.
+ACTIVITY SCHEDULING: Small, meaningful activities tied to ${his} values. One or two things, not a packed schedule.
+MOOD-ACTIVITY CONNECTION: Help them see the link between behavior and mood.
 VALUES CLARIFICATION: "Is there something that used to feel meaningful that you haven't done in a while?"
 GRADED TASK: Break it into the smallest possible first step. "What's just the first five minutes?"
 AVOIDANCE PATTERNS: Name avoidance kindly — "It sounds like that's been getting pushed back. What gets in the way?"
 
 APPROACH: Always compassionate about low motivation — never shame it. Find the smallest door in.
 TONE: Natural prose. Warm. No lists. No productivity-bro energy.`}
-};
+  };
+}
 
 // ── STATE ──────────────────────────────────────────────────────────────────────
 let currentBot='orchestrator';
@@ -557,13 +578,13 @@ function setStreak(n){document.getElementById('streak-d').textContent=n;document
 function renderMsgs(){
   const el=document.getElementById('messages'), conv=convos[currentBot];
   if(!conv.length){
-    el.innerHTML=`<div class="welcome"><h2>Hey, Jackson.</h2><p>This is your space. Work through something, vent, do a CBT session, or just talk. I'll follow your lead.</p><div class="starters"><button class="starter" onclick="sendStarter(this.textContent)">I want to work through something on my mind</button><button class="starter" onclick="sendStarter(this.textContent)">I've been feeling anxious lately</button><button class="starter" onclick="sendStarter(this.textContent)">I'm struggling to stay motivated</button><button class="starter" onclick="sendStarter(this.textContent)">I just need to talk</button></div></div>`;
+    el.innerHTML=`<div class="welcome"><h2>Hey, ${userName}.</h2><p>This is your space. Work through something, vent, do a CBT session, or just talk. I'll follow your lead.</p><div class="starters"><button class="starter" onclick="sendStarter(this.textContent)">I want to work through something on my mind</button><button class="starter" onclick="sendStarter(this.textContent)">I've been feeling anxious lately</button><button class="starter" onclick="sendStarter(this.textContent)">I'm struggling to stay motivated</button><button class="starter" onclick="sendStarter(this.textContent)">I just need to talk</button></div></div>`;
     return;
   }
   el.innerHTML=conv.map(msgHTML).join(''); el.scrollTop=el.scrollHeight;
 }
 function msgHTML(m){
-  const cfg=BOTS[currentBot];
+  const cfg=getBots()[currentBot];
   if(m.type==='mode-check') return `<div class="mode-check"><div class="mode-check-text">${m.content}</div><div class="mode-check-btns"><button class="mode-check-btn" onclick="respondMode('support')">Just talk</button><button class="mode-check-btn" onclick="respondMode('therapist')">Work through it</button><button class="mode-check-btn" onclick="respondMode('friend')">Something else</button></div></div>`;
   const u=m.role==='user';
   return `<div class="msg ${u?'user':'assistant'}"><div class="msg-av" style="background:${u?'#9a948c':cfg.color}">${u?'J':cfg.initial}</div><div class="msg-bub">${m.content.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>')}</div></div>`;
@@ -580,7 +601,7 @@ function renderMoodHist(){
 
 // ── BOT SWITCH ─────────────────────────────────────────────────────────────────
 function switchBot(bot){
-  currentBot=bot; const cfg=BOTS[bot];
+  currentBot=bot; const cfg=getBots()[bot];
   document.querySelectorAll('.bot-btn').forEach(b=>b.classList.toggle('active',b.dataset.bot===bot));
   document.querySelectorAll('.mnav-btn[data-bot]').forEach(b=>b.classList.toggle('active',b.dataset.bot===bot));
   document.getElementById('hdr-dot').style.background=cfg.color;
@@ -616,7 +637,7 @@ function closeOverlay(){document.getElementById('mobile-overlay').classList.remo
 async function extractMem(userMsg,botReply){
   if(!apiKey)return;
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:`Extract 0-2 short memory notes from this therapy exchange for Jackson's CBT app. Focus on: recurring patterns, triggers, things that help him, values, significant events. Return ONLY a JSON array of strings under 12 words each. Example: ["Catastrophizes about work deadlines","Running lifts his mood"]. If nothing to save: []`,messages:[{role:'user',content:`User: "${userMsg}"\nBot: "${botReply}"`}]})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,system:`Extract 0-2 short memory notes from this therapy exchange for 's CBT app. Focus on: recurring patterns, triggers, things that help them, values, significant events. Return ONLY a JSON array of strings under 12 words each. Example: ["Catastrophizes about work deadlines","Running lifts their mood"]. If nothing to save: []`,messages:[{role:'user',content:`User: "${userMsg}"\nBot: "${botReply}"`}]})});
     const data=await res.json(), raw=(data.content?.[0]?.text||'[]').replace(/```json|```/g,'').trim();
     const extracted=JSON.parse(raw);
     if(Array.isArray(extracted)&&extracted.length){memories.push(...extracted);if(memories.length>40)memories=memories.slice(-40);ls('jcbt_memories',memories);renderMem();}
@@ -627,7 +648,7 @@ async function extractMem(userMsg,botReply){
 function buildCtx(){
   let ctx='';
   if(memories.length||moodLog.length){
-    ctx+='\n\nJACKSON\'S MEMORY & HISTORY:';
+    ctx+='\n\n'+userName.toUpperCase()+'\'S MEMORY & HISTORY:';
     if(memories.length)ctx+='\nKey things to remember:\n'+memories.map(m=>`- ${m}`).join('\n');
     if(moodLog.length){const l={1:'rough',2:'okay',3:'good',4:'great'};ctx+='\nRecent mood: '+moodLog.slice(-7).map(m=>`${new Date(m.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}: ${l[m.score]}`).join(', ');}
   }
@@ -635,7 +656,7 @@ function buildCtx(){
 }
 async function callAPI(userText){
   if(!apiKey)throw new Error('NO_KEY');
-  const bot=BOTS[currentBot];
+  const bot=getBots()[currentBot];
   const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:bot.system+buildCtx(),messages:convos[currentBot].filter(m=>m.role==='user'||m.role==='assistant').slice(-20).map(m=>({role:m.role,content:m.content}))})});
   const data=await res.json();
   if(data.error)throw new Error(data.error.message);
@@ -645,7 +666,7 @@ async function callAPI(userText){
 // ── MESSAGING ──────────────────────────────────────────────────────────────────
 function addMsg(role,content,type){convos[currentBot].push({role,content,type:type||role});renderMsgs();}
 function showTyping(){
-  const cfg=BOTS[currentBot],el=document.getElementById('messages'),d=document.createElement('div');
+  const cfg=getBots()[currentBot],el=document.getElementById('messages'),d=document.createElement('div');
   d.className='typing-wrap';d.id='typing-ind';
   d.innerHTML=`<div class="msg-av" style="background:${cfg.color};width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:white;flex-shrink:0">${cfg.initial}</div><div class="typing-bub"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
   el.appendChild(d);el.scrollTop=el.scrollHeight;
@@ -695,7 +716,7 @@ function exportData(){
   const payload = {
     version: 1,
     exportedAt: new Date().toISOString(),
-    exportedBy: 'Jackson',
+    exportedBy: userName,
     memories: memories,
     moodLog: moodLog,
     streak: streak,
@@ -781,7 +802,7 @@ if(!confirm(’Import backup from ’ + dateLabel + ‘?\n\nMemories and mood lo
   imsg.className = 'st-msg ok';
   setTimeout(function(){ imsg.textContent = ''; }, 3000);
 } catch(err) {
-  imsg.textContent = "Could not read that file. Make sure it's a valid Jackson CBT backup.";
+  imsg.textContent = "Could not read that file. Make sure it's a valid CBT backup file.";
   imsg.className = 'st-msg err';
 }
 ```
