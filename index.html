@@ -96,12 +96,12 @@ transition: background 0.18s var(–ease); border-left: 2px solid transparent;
 .mood-lbl { font-size: 10px; color: var(–text3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 7px; }
 .mood-strip { display: flex; gap: 5px; }
 .mood-btn {
-flex: 1; padding: 6px 0; border: 1px solid var(–border); border-radius: 7px;
-background: var(–bg2); cursor: pointer; font-size: 15px; text-align: center;
+flex: 1; padding: 6px 0; border: none; border-radius: 7px;
+background: var(–accent); cursor: pointer; font-size: 15px; text-align: center;
 transition: background 0.18s var(–ease), transform 0.12s var(–ease); line-height: 1;
 }
-.mood-btn:active { background: var(–bg3) !important; transform: scale(0.88) !important; }
-.mood-btn.selected { border-color: var(–accent); background: rgba(74,107,90,0.13); }
+.mood-btn:active { background: var(–accent-h) !important; transform: scale(0.88) !important; }
+.mood-btn.selected { background: var(–accent-h); outline: 2px solid white; outline-offset: 1px; }
 
 /* ── MAIN CHAT ── */
 #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
@@ -207,12 +207,12 @@ text-align: center; animation: msgIn 0.28s var(–ease) both;
 .mode-check-text { font-size: 13px; color: var(–text2); line-height: 1.6; }
 .mode-check-btns { display: flex; gap: 7px; margin-top: 11px; justify-content: center; flex-wrap: wrap; }
 .mode-check-btn {
-padding: 8px 15px; border-radius: 20px; border: 1px solid var(–border);
-background: var(–bg2); cursor: pointer; font-size: 12px; font-weight: 500;
-font-family: ‘DM Sans’, sans-serif; color: var(–text2);
+padding: 8px 15px; border-radius: 20px; border: none;
+background: var(–accent); color: white; cursor: pointer; font-size: 12px; font-weight: 500;
+font-family: ‘DM Sans’, sans-serif;
 transition: background 0.18s var(–ease), transform 0.12s var(–ease);
 }
-.mode-check-btn:active { background: var(–accent) !important; color: white !important; transform: scale(0.95); }
+.mode-check-btn:active { background: var(–accent-h) !important; transform: scale(0.95); }
 
 .welcome {
 align-self: center; text-align: center; padding: 30px 18px; max-width: 390px;
@@ -222,13 +222,13 @@ animation: msgIn 0.35s var(–ease) both;
 .welcome p { font-size: 14px; color: var(–text2); line-height: 1.7; }
 .starters { display: flex; flex-direction: column; gap: 7px; margin-top: 20px; }
 .starter {
-padding: 12px 15px; border: 1px solid var(–border); border-radius: 10px;
-background: var(–surface); cursor: pointer; font-size: 13px;
-font-family: ‘DM Sans’, sans-serif; color: var(–text2); text-align: left;
-transition: background 0.18s var(–ease), transform 0.12s var(–ease), border-color 0.18s;
+padding: 12px 15px; border: none; border-radius: 10px;
+background: var(–accent); color: white; cursor: pointer; font-size: 13px;
+font-family: ‘DM Sans’, sans-serif; text-align: left;
+transition: background 0.18s var(–ease), transform 0.12s var(–ease);
 line-height: 1.5;
 }
-.starter:active { background: var(–bg3) !important; transform: scale(0.98); border-color: var(–accent); }
+.starter:active { background: var(–accent-h) !important; transform: scale(0.98); }
 
 /* ── INPUT ── */
 #input-area {
@@ -334,21 +334,24 @@ display: flex; flex-direction: column; gap: 22px; -webkit-overflow-scrolling: to
 }
 .mo-mood-strip { display: flex; gap: 8px; }
 .mo-mood-btn {
-flex: 1; padding: 12px 0; border: 1px solid var(–border); border-radius: 10px;
-background: var(–bg2); cursor: pointer; font-size: 22px; text-align: center;
-transition: background 0.18s var(–ease), transform 0.12s var(–ease), border-color 0.18s;
+flex: 1; padding: 12px 0; border: none; border-radius: 10px;
+background: var(–accent); cursor: pointer; font-size: 22px; text-align: center;
+transition: background 0.18s var(–ease), transform 0.12s var(–ease);
 }
-.mo-mood-btn:active { background: var(–bg3) !important; transform: scale(0.88) !important; }
-.mo-mood-btn.selected { border-color: var(–accent); background: rgba(74,107,90,0.13); }
+.mo-mood-btn:active { background: var(–accent-h) !important; transform: scale(0.88) !important; }
+.mo-mood-btn.selected { background: var(–accent-h); outline: 2px solid white; outline-offset: 1px; }
 
-/* ── SETTINGS PAGE (full-screen, not overlay) ── */
+/* ── SETTINGS PAGE (full-screen) ── */
 #settings-page {
-display: none; position: fixed; inset: 0; background: var(–bg);
-z-index: 999; flex-direction: column;
-transform: translateY(100%);
-transition: transform 0.32s var(–ease);
+position: fixed; inset: 0;
+background: var(–bg);
+z-index: 999;
+flex-direction: column;
+display: none;
 }
-#settings-page.open { display: flex; transform: translateY(0); }
+#settings-page.open {
+display: flex;
+}
 .sp-header {
 display: flex; align-items: center; gap: 12px;
 padding: 14px 18px; background: var(–surface);
@@ -379,15 +382,17 @@ margin-bottom: 11px; -webkit-appearance: none;
 .sp-input:focus { border-color: rgba(74,107,90,0.5); background: var(–surface); }
 .sp-row { display: flex; gap: 8px; margin-bottom: 6px; }
 .sp-btn {
-flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(–border);
-background: var(–bg2); cursor: pointer; font-family: ‘DM Sans’, sans-serif;
-font-size: 13px; font-weight: 500; color: var(–text2);
-transition: background 0.18s var(–ease), transform 0.12s var(–ease), color 0.18s;
+flex: 1; padding: 12px; border-radius: 10px; border: none;
+background: var(–accent); color: white; cursor: pointer;
+font-family: ‘DM Sans’, sans-serif;
+font-size: 13px; font-weight: 500;
+transition: background 0.18s var(–ease), transform 0.12s var(–ease);
 }
-.sp-btn:active { transform: scale(0.96) !important; background: var(–bg3) !important; }
-.sp-btn.primary { background: var(–accent); color: white; border-color: transparent; }
-.sp-btn.primary:active { background: var(–accent-h) !important; color: white !important; }
-.sp-btn.danger:active { background: rgba(196,99,74,0.15) !important; color: var(–coral) !important; border-color: var(–coral) !important; }
+.sp-btn:active { transform: scale(0.96) !important; background: var(–accent-h) !important; }
+.sp-btn.primary { background: var(–accent); color: white; border: none; }
+.sp-btn.primary:active { background: var(–accent-h) !important; }
+.sp-btn.danger { background: rgba(196,99,74,0.15); color: var(–coral); border: 1px solid rgba(196,99,74,0.3); }
+.sp-btn.danger:active { background: rgba(196,99,74,0.3) !important; }
 .sp-msg { font-size: 12px; margin-top: 4px; min-height: 18px; transition: opacity 0.3s; }
 .sp-msg.ok { color: var(–accent); } .sp-msg.err { color: var(–coral); }
 .sp-divider { border: none; border-top: 1px solid var(–border); margin: 6px 0 0; }
@@ -401,23 +406,20 @@ transition: all 0.2s var(–ease); background: var(–bg2); margin-bottom: 8px;
 .sp-drop input { display: none; }
 
 /* ── iOS TAP-ACTIVE FALLBACK ── */
-/* Safari won’t fire :active on most elements without a touch listener.
-The JS touchstart handler adds .tap-active — these mirror every :active rule. */
-.tap-active { opacity: 0.82; transform: scale(0.96) !important; transition: transform 0.08s, opacity 0.08s !important; }
-button.auth-btn.tap-active         { background: var(–accent-h) !important; transform: scale(0.97) !important; opacity:1; }
-button.sp-btn.primary.tap-active   { background: var(–accent-h) !important; transform: scale(0.96) !important; opacity:1; }
-button.sp-btn.tap-active           { background: var(–bg3) !important; transform: scale(0.96) !important; opacity:1; }
-button#send-btn.tap-active         { background: var(–accent-h) !important; transform: scale(0.88) !important; opacity:1; }
-button.mood-btn.tap-active         { background: var(–bg3) !important; transform: scale(0.88) !important; opacity:1; }
-button.mo-mood-btn.tap-active      { background: var(–bg3) !important; transform: scale(0.88) !important; opacity:1; }
-button.mode-check-btn.tap-active   { background: var(–accent) !important; color: white !important; transform: scale(0.95) !important; opacity:1; }
-button.mnav-btn.tap-active         { background: var(–bg2) !important; opacity:1; transform: none !important; }
-button.bot-btn.tap-active          { background: var(–bg3) !important; transform: scale(0.98) !important; opacity:1; }
-button.clear-btn.tap-active        { background: rgba(196,99,74,0.1) !important; color: var(–coral) !important; opacity:1; }
-button.hdr-gear.tap-active         { background: var(–bg3) !important; transform: scale(0.9) !important; opacity:1; }
-button.sp-back.tap-active          { background: var(–bg3) !important; transform: scale(0.9) !important; opacity:1; }
-button.mo-close.tap-active         { background: var(–bg3) !important; transform: scale(0.9) !important; opacity:1; }
-.starter.tap-active                { background: var(–bg3) !important; border-color: var(–accent) !important; transform: scale(0.98) !important; opacity:1; }
+.tap-active { background: var(–accent-h) !important; color: white !important; transform: scale(0.95) !important; transition: transform 0.08s, background 0.08s !important; }
+button.auth-btn.tap-active         { transform: scale(0.97) !important; }
+button#send-btn.tap-active         { transform: scale(0.88) !important; }
+button.mood-btn.tap-active         { transform: scale(0.88) !important; }
+button.mo-mood-btn.tap-active      { transform: scale(0.88) !important; }
+button.mode-check-btn.tap-active   { transform: scale(0.95) !important; }
+button.mnav-btn.tap-active         { background: var(–bg2) !important; color: var(–text3) !important; transform: none !important; }
+button.bot-btn.tap-active          { background: var(–bg3) !important; color: var(–text) !important; transform: scale(0.98) !important; }
+button.sp-btn.danger.tap-active    { background: rgba(196,99,74,0.3) !important; color: var(–coral) !important; }
+button.hdr-gear.tap-active         { background: var(–bg3) !important; color: var(–text3) !important; transform: scale(0.9) !important; }
+button.sp-back.tap-active          { background: var(–bg3) !important; color: var(–text2) !important; transform: scale(0.9) !important; }
+button.mo-close.tap-active         { background: var(–bg3) !important; color: var(–text2) !important; transform: scale(0.9) !important; }
+button.clear-btn.tap-active        { background: rgba(196,99,74,0.1) !important; color: var(–coral) !important; transform: scale(0.97) !important; }
+.starter.tap-active                { background: var(–accent-h) !important; transform: scale(0.98) !important; }
 </style>
 
 </head>
@@ -874,15 +876,11 @@ function logMood(btn,score,ctx){
 function openSettings(){
   document.getElementById('st-key').value=ls('jcbt_apikey')||'';
   document.getElementById('st-pw1').value=''; document.getElementById('st-pw2').value='';
-  document.getElementById('st-msg').textContent='';
-  const pg=document.getElementById('settings-page');
-  pg.style.display='flex';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>pg.classList.add('open')));
+  document.getElementById('st-msg').textContent=''; document.getElementById('import-msg').textContent='';
+  document.getElementById('settings-page').style.display='flex';
 }
 function closeSettings(){
-  const pg=document.getElementById('settings-page');
-  pg.classList.remove('open');
-  pg.addEventListener('transitionend',()=>{ pg.style.display='none'; },{once:true});
+  document.getElementById('settings-page').style.display='none';
 }
 async function saveSettings(){
   const key=document.getElementById('st-key').value.trim();
