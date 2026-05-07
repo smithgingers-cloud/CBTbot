@@ -312,7 +312,8 @@ min-width: 60px;
 #mobile-overlay {
 display: none; position: fixed; inset: 0; background: var(–bg);
 z-index: 50; flex-direction: column;
-transform: translateX(100%); transition: transform 0.3s var(–ease);
+transform: translateX(100%);
+transition: transform 0.3s var(–ease);
 }
 #mobile-overlay.open { display: flex; transform: translateX(0); }
 .mo-header {
@@ -343,11 +344,11 @@ transition: background 0.18s var(–ease), transform 0.12s var(–ease), border-
 /* ── SETTINGS PAGE (full-screen, not overlay) ── */
 #settings-page {
 display: none; position: fixed; inset: 0; background: var(–bg);
-z-index: 80; flex-direction: column;
-animation: slideUp 0.3s var(–ease) both;
+z-index: 999; flex-direction: column;
+transform: translateY(100%);
+transition: transform 0.32s var(–ease);
 }
-@keyframes slideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
-#settings-page.open { display: flex; }
+#settings-page.open { display: flex; transform: translateY(0); }
 .sp-header {
 display: flex; align-items: center; gap: 12px;
 padding: 14px 18px; background: var(–surface);
@@ -398,6 +399,25 @@ transition: all 0.2s var(–ease); background: var(–bg2); margin-bottom: 8px;
 }
 .sp-drop:active, .sp-drop.drag-over { border-color: var(–accent); background: rgba(74,107,90,0.07); color: var(–accent); }
 .sp-drop input { display: none; }
+
+/* ── iOS TAP-ACTIVE FALLBACK ── */
+/* Safari won’t fire :active on most elements without a touch listener.
+The JS touchstart handler adds .tap-active — these mirror every :active rule. */
+.tap-active { opacity: 0.82; transform: scale(0.96) !important; transition: transform 0.08s, opacity 0.08s !important; }
+button.auth-btn.tap-active         { background: var(–accent-h) !important; transform: scale(0.97) !important; opacity:1; }
+button.sp-btn.primary.tap-active   { background: var(–accent-h) !important; transform: scale(0.96) !important; opacity:1; }
+button.sp-btn.tap-active           { background: var(–bg3) !important; transform: scale(0.96) !important; opacity:1; }
+button#send-btn.tap-active         { background: var(–accent-h) !important; transform: scale(0.88) !important; opacity:1; }
+button.mood-btn.tap-active         { background: var(–bg3) !important; transform: scale(0.88) !important; opacity:1; }
+button.mo-mood-btn.tap-active      { background: var(–bg3) !important; transform: scale(0.88) !important; opacity:1; }
+button.mode-check-btn.tap-active   { background: var(–accent) !important; color: white !important; transform: scale(0.95) !important; opacity:1; }
+button.mnav-btn.tap-active         { background: var(–bg2) !important; opacity:1; transform: none !important; }
+button.bot-btn.tap-active          { background: var(–bg3) !important; transform: scale(0.98) !important; opacity:1; }
+button.clear-btn.tap-active        { background: rgba(196,99,74,0.1) !important; color: var(–coral) !important; opacity:1; }
+button.hdr-gear.tap-active         { background: var(–bg3) !important; transform: scale(0.9) !important; opacity:1; }
+button.sp-back.tap-active          { background: var(–bg3) !important; transform: scale(0.9) !important; opacity:1; }
+button.mo-close.tap-active         { background: var(–bg3) !important; transform: scale(0.9) !important; opacity:1; }
+.starter.tap-active                { background: var(–bg3) !important; border-color: var(–accent) !important; transform: scale(0.98) !important; opacity:1; }
 </style>
 
 </head>
@@ -690,6 +710,20 @@ function launchApp(){
 window.addEventListener('load',()=>{
   if(!ls('jcbt_pwhash'))showSetup();
   else document.getElementById('lock-screen').classList.remove('hidden');
+
+  // iOS Safari :active fix — requires at least one touch listener on document
+  document.addEventListener('touchstart', function(){}, {passive:true});
+
+  // JS-driven tap highlight for all buttons (belt-and-suspenders for exported HTML)
+  document.addEventListener('touchstart', function(e){
+    const btn = e.target.closest('button, .starter, .mode-check-btn, .sp-drop');
+    if(btn) btn.classList.add('tap-active');
+  }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    document.querySelectorAll('.tap-active').forEach(el=>{
+      setTimeout(()=>el.classList.remove('tap-active'), 150);
+    });
+  }, {passive:true});
 });
 
 // ── BOT CONFIGS ───────────────────────────────────────────────────────────────
@@ -841,9 +875,15 @@ function openSettings(){
   document.getElementById('st-key').value=ls('jcbt_apikey')||'';
   document.getElementById('st-pw1').value=''; document.getElementById('st-pw2').value='';
   document.getElementById('st-msg').textContent='';
-  document.getElementById('settings-page').classList.add('open');
+  const pg=document.getElementById('settings-page');
+  pg.style.display='flex';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>pg.classList.add('open')));
 }
-function closeSettings(){ document.getElementById('settings-page').classList.remove('open'); }
+function closeSettings(){
+  const pg=document.getElementById('settings-page');
+  pg.classList.remove('open');
+  pg.addEventListener('transitionend',()=>{ pg.style.display='none'; },{once:true});
+}
 async function saveSettings(){
   const key=document.getElementById('st-key').value.trim();
   const pw1=document.getElementById('st-pw1').value,pw2=document.getElementById('st-pw2').value;
@@ -860,8 +900,16 @@ async function saveSettings(){
 }
 
 // ── OVERLAY ────────────────────────────────────────────────────────────────────
-function openOverlay(){ document.getElementById('mobile-overlay').classList.add('open'); }
-function closeOverlay(){ document.getElementById('mobile-overlay').classList.remove('open'); }
+function openOverlay(){
+  const el=document.getElementById('mobile-overlay');
+  el.style.display='flex';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('open')));
+}
+function closeOverlay(){
+  const el=document.getElementById('mobile-overlay');
+  el.classList.remove('open');
+  el.addEventListener('transitionend',()=>{ el.style.display='none'; },{once:true});
+}
 
 // ── API ────────────────────────────────────────────────────────────────────────
 function buildCtx(){
