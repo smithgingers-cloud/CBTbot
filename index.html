@@ -12,35 +12,57 @@
   --bg: #f5f2ed; --bg2: #edeae3; --bg3: #e0dbd2; --surface: #faf8f5;
   --text: #1c1a17; --text2: #5a5650; --text3: #9a948c;
   --accent: #4a6b5a; --accent-h: #3a5a49;
-  --coral: #c4634a; --amber: #c49a3a; --teal: #5b8c7a;
-  --border: rgba(28,26,23,0.1);
+  --coral: #c4634a; --amber: #c49a3a;
+  --border: rgba(28,26,23,0.11);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 html { height: 100%; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100%; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: 'DM Sans', sans-serif; background: var(--bg);
+  color: var(--text); height: 100%; overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
 
-/* SCREENS */
-.screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: var(–bg); z-index: 100; }
+/* ── SCREENS ── */
+.screen {
+position: fixed; inset: 0; display: flex; align-items: center;
+justify-content: center; background: var(–bg); z-index: 100;
+transition: opacity 0.3s var(–ease);
+}
 .screen.hidden { display: none; }
-.auth-card { background: var(–surface); border: 1px solid var(–border); border-radius: 20px; padding: 36px 30px; width: 100%; max-width: 360px; margin: 16px; box-shadow: 0 8px 40px rgba(28,26,23,0.1); }
+.auth-card {
+background: var(–surface); border: 1px solid var(–border);
+border-radius: 22px; padding: 36px 30px; width: 100%; max-width: 360px;
+margin: 16px; box-shadow: 0 8px 48px rgba(28,26,23,0.1);
+animation: cardIn 0.4s var(–ease);
+}
+@keyframes cardIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 .auth-logo { font-family: ‘Lora’, serif; font-size: 22px; color: var(–text); margin-bottom: 4px; }
 .auth-sub { font-size: 11px; color: var(–text3); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 26px; }
 .auth-label { font-size: 12px; color: var(–text2); margin-bottom: 5px; font-weight: 500; }
-.auth-input { width: 100%; padding: 12px 13px; border: 1px solid var(–border); border-radius: 10px; font-family: ‘DM Sans’, sans-serif; font-size: 15px; background: var(–bg); color: var(–text); outline: none; transition: border-color 0.15s; margin-bottom: 13px; -webkit-appearance: none; }
-.auth-input:focus { border-color: rgba(74,107,90,0.5); }
-.auth-btn { width: 100%; padding: 13px; border-radius: 10px; border: none; background: var(–accent); color: white; font-family: ‘DM Sans’, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s; margin-top: 4px; }
-.auth-btn:hover { background: var(–accent-h); }
-.auth-btn:active { background: var(–accent-h); transform: scale(0.98); }
+.auth-input {
+width: 100%; padding: 12px 13px; border: 1px solid var(–border);
+border-radius: 10px; font-family: ‘DM Sans’, sans-serif; font-size: 15px;
+background: var(–bg); color: var(–text); outline: none;
+transition: border-color 0.2s var(–ease); margin-bottom: 13px; -webkit-appearance: none;
+}
+.auth-input:focus { border-color: rgba(74,107,90,0.55); }
+.auth-btn {
+width: 100%; padding: 13px; border-radius: 10px; border: none;
+background: var(–accent); color: white; font-family: ‘DM Sans’, sans-serif;
+font-size: 14px; font-weight: 500; cursor: pointer;
+transition: background 0.2s var(–ease), transform 0.12s var(–ease); margin-top: 4px;
+}
+.auth-btn:active { background: var(–accent-h); transform: scale(0.97); }
 .auth-err { font-size: 12px; color: var(–coral); margin-top: 9px; min-height: 18px; }
 .auth-link { font-size: 12px; color: var(–text3); text-align: center; margin-top: 14px; cursor: pointer; }
 .auth-link span { color: var(–accent); text-decoration: underline; }
 .auth-hint { font-size: 12px; color: var(–text3); background: var(–bg2); border-radius: 8px; padding: 10px 12px; margin-bottom: 16px; line-height: 1.65; }
 .auth-hint b { color: var(–text2); }
 
-/* APP */
+/* ── APP SHELL ── */
 #app { display: none; height: 100%; flex-direction: column; }
 #app.visible { display: flex; }
-
-/* DESKTOP: 3-col layout */
 @media (min-width: 700px) {
 #app { flex-direction: row; }
 #sidebar { display: flex !important; }
@@ -49,15 +71,23 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 #mobile-overlay { display: none !important; }
 }
 
-/* SIDEBAR */
-#sidebar { width: 220px; min-width: 220px; background: var(–surface); border-right: 1px solid var(–border); display: none; flex-direction: column; overflow: hidden; flex-shrink: 0; }
+/* ── SIDEBAR ── */
+#sidebar {
+width: 220px; min-width: 220px; background: var(–surface);
+border-right: 1px solid var(–border); display: none;
+flex-direction: column; overflow: hidden; flex-shrink: 0;
+}
 .sb-header { padding: 20px 18px 16px; border-bottom: 1px solid var(–border); }
 .app-name { font-family: ‘Lora’, serif; font-size: 17px; font-weight: 500; }
 .app-sub { font-size: 10px; color: var(–text3); margin-top: 2px; letter-spacing: 0.07em; text-transform: uppercase; }
 .sb-sec { padding: 14px 18px 5px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(–text3); }
-.bot-btn { display: flex; align-items: center; gap: 10px; padding: 10px 18px; cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: background 0.15s; border-left: 2px solid transparent; }
+.bot-btn {
+display: flex; align-items: center; gap: 10px; padding: 10px 18px;
+cursor: pointer; border: none; background: none; width: 100%; text-align: left;
+transition: background 0.18s var(–ease); border-left: 2px solid transparent;
+}
 .bot-btn:hover { background: var(–bg2); }
-.bot-btn:active { background: var(–bg3); }
+.bot-btn:active { background: var(–bg3) !important; transform: scale(0.98); }
 .bot-btn.active { background: var(–bg2); border-left-color: var(–accent); }
 .bot-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .bot-btn-name { font-size: 13px; font-weight: 500; color: var(–text); display: block; }
@@ -65,136 +95,309 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .sb-footer { margin-top: auto; padding: 14px 18px; border-top: 1px solid var(–border); }
 .mood-lbl { font-size: 10px; color: var(–text3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 7px; }
 .mood-strip { display: flex; gap: 5px; }
-.mood-btn { flex: 1; padding: 6px 0; border: 1px solid var(–border); border-radius: 7px; background: var(–bg2); cursor: pointer; font-size: 15px; text-align: center; transition: all 0.15s; line-height: 1; }
-.mood-btn:hover { background: var(–bg3); }
-.mood-btn:active { background: var(–bg3); transform: scale(0.93); }
-.mood-btn.selected { border-color: var(–accent); background: rgba(74,107,90,0.12); }
+.mood-btn {
+flex: 1; padding: 6px 0; border: 1px solid var(–border); border-radius: 7px;
+background: var(–bg2); cursor: pointer; font-size: 15px; text-align: center;
+transition: background 0.18s var(–ease), transform 0.12s var(–ease); line-height: 1;
+}
+.mood-btn:active { background: var(–bg3) !important; transform: scale(0.88) !important; }
+.mood-btn.selected { border-color: var(–accent); background: rgba(74,107,90,0.13); }
 
-/* MAIN */
+/* ── MAIN CHAT ── */
 #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
-#chat-header { padding: 12px 16px; background: var(–surface); border-bottom: 1px solid var(–border); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.hdr-dot { width: 9px; height: 9px; border-radius: 50%; transition: background 0.3s; flex-shrink: 0; }
+#chat-header {
+padding: 12px 16px; background: var(–surface);
+border-bottom: 1px solid var(–border); display: flex; align-items: center;
+gap: 10px; flex-shrink: 0;
+}
+.hdr-dot { width: 9px; height: 9px; border-radius: 50%; transition: background 0.4s var(–ease); flex-shrink: 0; }
 .hdr-name { font-family: ‘Lora’, serif; font-size: 16px; font-weight: 500; }
 .hdr-desc { font-size: 11px; color: var(–text3); }
-.mode-badge { margin-left: auto; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; background: var(–bg3); color: var(–text2); border: 1px solid var(–border); transition: all 0.3s; flex-shrink: 0; }
+.mode-badge {
+margin-left: auto; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase;
+padding: 3px 10px; border-radius: 20px; background: var(–bg3); color: var(–text2);
+border: 1px solid var(–border); transition: all 0.35s var(–ease); flex-shrink: 0;
+}
 .mode-badge.therapist { background: rgba(74,107,90,0.12); color: var(–accent); border-color: rgba(74,107,90,0.25); }
 .mode-badge.support   { background: rgba(196,99,74,0.1);  color: var(–coral); border-color: rgba(196,99,74,0.25); }
 .mode-badge.friend    { background: rgba(196,154,58,0.12); color: var(–amber); border-color: rgba(196,154,58,0.25); }
-.hdr-gear { margin-left: 8px; width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(–border); background: var(–bg2); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(–text3); flex-shrink: 0; transition: all 0.15s; }
+.hdr-gear {
+margin-left: 8px; width: 30px; height: 30px; border-radius: 8px;
+border: 1px solid var(–border); background: var(–bg2); cursor: pointer;
+display: flex; align-items: center; justify-content: center; color: var(–text3);
+flex-shrink: 0; transition: background 0.18s var(–ease), transform 0.12s var(–ease);
+}
 .hdr-gear:hover { background: var(–bg3); }
+.hdr-gear:active { transform: scale(0.9); background: var(–bg3); }
 
-#messages { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 18px 14px; display: flex; flex-direction: column; gap: 14px; -webkit-overflow-scrolling: touch; }
+/* ── MESSAGES ── */
+#messages {
+flex: 1; overflow-y: auto; overflow-x: hidden;
+padding: 18px 14px; display: flex; flex-direction: column; gap: 14px;
+-webkit-overflow-scrolling: touch; scroll-behavior: smooth;
+}
 #messages::-webkit-scrollbar { width: 3px; }
 #messages::-webkit-scrollbar-thumb { background: var(–bg3); border-radius: 2px; }
 
-@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-.msg { display: flex; gap: 9px; max-width: 84%; animation: fadeUp 0.2s ease; }
+@keyframes msgIn {
+from { opacity: 0; transform: translateY(10px) scale(0.98); }
+to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.msg {
+display: flex; gap: 9px; max-width: 84%;
+animation: msgIn 0.28s var(–ease) both;
+}
 .msg.user { align-self: flex-end; flex-direction: row-reverse; }
 .msg.assistant { align-self: flex-start; }
 @media (min-width: 700px) { .msg { max-width: 74%; } }
-.msg-av { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: white; }
-.msg-bub { padding: 11px 14px; border-radius: 15px; font-size: 14px; line-height: 1.7; color: var(–text); }
-.msg.user .msg-bub { background: var(–bg3); color: var(–text); border-bottom-right-radius: 4px; border: 1px solid var(–border); }
-.msg.assistant .msg-bub { background: var(–surface); border: 1px solid var(–border); border-bottom-left-radius: 4px; }
 
-.typing-wrap { display: flex; align-items: center; gap: 9px; align-self: flex-start; animation: fadeUp 0.2s ease; }
-.typing-bub { padding: 13px 16px; background: var(–surface); border: 1px solid var(–border); border-radius: 15px; border-bottom-left-radius: 4px; display: flex; gap: 4px; align-items: center; }
-.typing-dot { width: 5px; height: 5px; border-radius: 50%; background: var(–text3); animation: tdot 1.3s ease-in-out infinite; }
-.typing-dot:nth-child(2){animation-delay:.18s} .typing-dot:nth-child(3){animation-delay:.36s}
-@keyframes tdot { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+.msg-av {
+width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+display: flex; align-items: center; justify-content: center;
+font-size: 11px; font-weight: 500; color: white;
+}
+.msg-bub {
+padding: 11px 14px; border-radius: 15px; font-size: 14px;
+line-height: 1.72; color: var(–text);
+}
+.msg.user .msg-bub {
+background: var(–bg3); color: var(–text);
+border-bottom-right-radius: 4px; border: 1px solid var(–border);
+}
+.msg.assistant .msg-bub {
+background: var(–surface); border: 1px solid var(–border);
+border-bottom-left-radius: 4px;
+}
 
-.mode-check { align-self: center; background: var(–surface); border: 1px solid var(–border); border-radius: 14px; padding: 15px 18px; max-width: 340px; width: 92%; text-align: center; animation: fadeUp 0.2s ease; }
+/* ── TYPING INDICATOR ── */
+.typing-wrap {
+display: flex; align-items: center; gap: 9px; align-self: flex-start;
+animation: msgIn 0.28s var(–ease) both;
+}
+.typing-bub {
+padding: 14px 18px; background: var(–surface); border: 1px solid var(–border);
+border-radius: 15px; border-bottom-left-radius: 4px;
+display: flex; gap: 5px; align-items: center;
+}
+.typing-dot {
+width: 6px; height: 6px; border-radius: 50%; background: var(–text3);
+animation: pulse 1.4s ease-in-out infinite;
+}
+.typing-dot:nth-child(1) { animation-delay: 0s; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes pulse {
+0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+30% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* streaming text cursor */
+.streaming-cursor {
+display: inline-block; width: 2px; height: 14px;
+background: var(–text3); margin-left: 2px; vertical-align: middle;
+animation: blink 0.8s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.mode-check {
+align-self: center; background: var(–surface); border: 1px solid var(–border);
+border-radius: 14px; padding: 15px 18px; max-width: 340px; width: 92%;
+text-align: center; animation: msgIn 0.28s var(–ease) both;
+}
 .mode-check-text { font-size: 13px; color: var(–text2); line-height: 1.6; }
 .mode-check-btns { display: flex; gap: 7px; margin-top: 11px; justify-content: center; flex-wrap: wrap; }
-.mode-check-btn { padding: 7px 13px; border-radius: 20px; border: 1px solid var(–border); background: var(–bg2); cursor: pointer; font-size: 12px; font-weight: 500; font-family: ‘DM Sans’, sans-serif; color: var(–text2); transition: all 0.15s; }
-.mode-check-btn:hover { background: var(–bg3); }
-.mode-check-btn:active { background: var(–bg3); transform: scale(0.95); }
+.mode-check-btn {
+padding: 8px 15px; border-radius: 20px; border: 1px solid var(–border);
+background: var(–bg2); cursor: pointer; font-size: 12px; font-weight: 500;
+font-family: ‘DM Sans’, sans-serif; color: var(–text2);
+transition: background 0.18s var(–ease), transform 0.12s var(–ease);
+}
+.mode-check-btn:active { background: var(–accent) !important; color: white !important; transform: scale(0.95); }
 
-.welcome { align-self: center; text-align: center; padding: 30px 18px; max-width: 390px; animation: fadeUp 0.3s ease; }
+.welcome {
+align-self: center; text-align: center; padding: 30px 18px; max-width: 390px;
+animation: msgIn 0.35s var(–ease) both;
+}
 .welcome h2 { font-family: ‘Lora’, serif; font-size: 24px; font-weight: 500; margin-bottom: 9px; }
 .welcome p { font-size: 14px; color: var(–text2); line-height: 1.7; }
 .starters { display: flex; flex-direction: column; gap: 7px; margin-top: 20px; }
-.starter { padding: 11px 15px; border: 1px solid var(–border); border-radius: 10px; background: var(–surface); cursor: pointer; font-size: 13px; font-family: ‘DM Sans’, sans-serif; color: var(–text2); text-align: left; transition: all 0.15s; line-height: 1.5; }
-.starter:hover { background: var(–bg2); }
-.starter:active { background: var(–bg3); transform: scale(0.98); }
+.starter {
+padding: 12px 15px; border: 1px solid var(–border); border-radius: 10px;
+background: var(–surface); cursor: pointer; font-size: 13px;
+font-family: ‘DM Sans’, sans-serif; color: var(–text2); text-align: left;
+transition: background 0.18s var(–ease), transform 0.12s var(–ease), border-color 0.18s;
+line-height: 1.5;
+}
+.starter:active { background: var(–bg3) !important; transform: scale(0.98); border-color: var(–accent); }
 
-/* INPUT */
-#input-area { padding: 10px 13px 14px; background: var(–surface); border-top: 1px solid var(–border); flex-shrink: 0; }
-@supports (padding-bottom: env(safe-area-inset-bottom)) { #input-area { padding-bottom: max(14px, env(safe-area-inset-bottom)); } }
+/* ── INPUT ── */
+#input-area {
+padding: 10px 13px 14px; background: var(–surface);
+border-top: 1px solid var(–border); flex-shrink: 0;
+}
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+#input-area { padding-bottom: max(14px, env(safe-area-inset-bottom)); }
+}
 .input-row { display: flex; gap: 8px; align-items: flex-end; }
-#user-input { flex: 1; resize: none; border: 1px solid var(–border); border-radius: 11px; padding: 10px 13px; font-family: ‘DM Sans’, sans-serif; font-size: 16px; background: var(–bg); color: var(–text); outline: none; line-height: 1.5; max-height: 120px; min-height: 42px; transition: border-color 0.15s; -webkit-appearance: none; }
+#user-input {
+flex: 1; resize: none; border: 1px solid var(–border); border-radius: 11px;
+padding: 10px 13px; font-family: ‘DM Sans’, sans-serif; font-size: 16px;
+background: var(–bg); color: var(–text); outline: none; line-height: 1.5;
+max-height: 120px; min-height: 42px;
+transition: border-color 0.2s var(–ease); -webkit-appearance: none;
+}
 #user-input:focus { border-color: rgba(74,107,90,0.5); }
 #user-input::placeholder { color: var(–text3); }
-#send-btn { width: 42px; height: 42px; border-radius: 11px; background: var(–accent); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
-#send-btn:active:not(:disabled) { background: var(–accent-h); transform: scale(0.95); }
-#send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+#send-btn {
+width: 42px; height: 42px; border-radius: 11px; background: var(–accent);
+border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+flex-shrink: 0; transition: background 0.18s var(–ease), transform 0.12s var(–ease);
+}
+#send-btn:active:not(:disabled) { background: var(–accent-h); transform: scale(0.88); }
+#send-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 .input-hint { font-size: 11px; color: var(–text3); margin-top: 6px; text-align: center; }
 @media (max-width: 699px) { .input-hint { display: none; } }
 
-/* RIGHT PANEL */
-#right-panel { width: 210px; min-width: 210px; background: var(–surface); border-left: 1px solid var(–border); display: none; flex-direction: column; padding: 18px 15px; gap: 20px; overflow-y: auto; flex-shrink: 0; }
+/* ── RIGHT PANEL ── */
+#right-panel {
+width: 210px; min-width: 210px; background: var(–surface);
+border-left: 1px solid var(–border); display: none; flex-direction: column;
+padding: 18px 15px; gap: 20px; overflow-y: auto; flex-shrink: 0;
+}
 .rp-title { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(–text3); margin-bottom: 9px; }
-.mem-item { font-size: 12px; color: var(–text2); line-height: 1.55; padding: 7px 9px; background: var(–bg2); border-radius: 7px; border-left: 2px solid var(–bg3); margin-bottom: 5px; }
+.mem-item {
+font-size: 12px; color: var(–text2); line-height: 1.55; padding: 7px 9px;
+background: var(–bg2); border-radius: 7px; border-left: 2px solid var(–bg3); margin-bottom: 5px;
+animation: msgIn 0.25s var(–ease) both;
+}
 .mem-item.fresh { border-left-color: var(–accent); }
 .empty-note { font-size: 12px; color: var(–text3); font-style: italic; }
 .streak-n { font-family: ‘Lora’, serif; font-size: 32px; color: var(–accent); font-weight: 500; line-height: 1; }
 .streak-l { font-size: 11px; color: var(–text3); margin-top: 2px; }
 .mood-row { display: flex; justify-content: space-between; font-size: 12px; color: var(–text2); padding: 3px 0; }
 .mood-row .mdate { color: var(–text3); }
-.clear-btn { margin-top: auto; width: 100%; padding: 9px; border: 1px solid var(–border); border-radius: 8px; background: none; cursor: pointer; font-size: 12px; color: var(–text3); font-family: ‘DM Sans’, sans-serif; transition: all 0.15s; }
-.clear-btn:hover { background: rgba(196,99,74,0.07); color: var(–coral); border-color: rgba(196,99,74,0.3); }
+.clear-btn {
+margin-top: auto; width: 100%; padding: 9px; border: 1px solid var(–border);
+border-radius: 8px; background: none; cursor: pointer; font-size: 12px;
+color: var(–text3); font-family: ‘DM Sans’, sans-serif;
+transition: background 0.18s var(–ease), color 0.18s, transform 0.12s;
+}
+.clear-btn:active { transform: scale(0.97); background: rgba(196,99,74,0.1); color: var(–coral); }
 
-/* MOBILE NAV */
-#mobile-nav { display: flex; background: var(–surface); border-top: 1px solid var(–border); flex-shrink: 0; padding: 0 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+/* ── MOBILE NAV ── */
+#mobile-nav {
+display: flex; background: var(–surface); border-top: 1px solid var(–border);
+flex-shrink: 0; padding: 0 4px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
 #mobile-nav::-webkit-scrollbar { display: none; }
-@supports (padding-bottom: env(safe-area-inset-bottom)) { #mobile-nav { padding-bottom: max(0px, calc(env(safe-area-inset-bottom) - 6px)); } }
-.mnav-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 14px; border: none; background: none; cursor: pointer; font-family: ‘DM Sans’, sans-serif; flex-shrink: 0; border-top: 2px solid transparent; transition: all 0.15s; }
-.mnav-btn:active { background: var(–bg2); }
-.mnav-btn.active { border-top-color: var(–accent); }
-.mnav-dot { width: 7px; height: 7px; border-radius: 50%; }
-.mnav-label { font-size: 10px; color: var(–text3); white-space: nowrap; }
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+#mobile-nav { padding-bottom: max(0px, calc(env(safe-area-inset-bottom) - 6px)); }
+}
+.mnav-btn {
+display: flex; flex-direction: column; align-items: center; gap: 3px;
+padding: 8px 14px; border: none; background: none; cursor: pointer;
+font-family: ‘DM Sans’, sans-serif; flex-shrink: 0;
+border-top: 2px solid transparent;
+transition: background 0.18s var(–ease), border-color 0.25s var(–ease);
+min-width: 60px;
+}
+.mnav-btn:active { background: var(–bg2) !important; }
+.mnav-btn.active { border-top-color: var(–accent); background: var(–bg2); }
+.mnav-dot { width: 7px; height: 7px; border-radius: 50%; transition: transform 0.18s var(–ease); }
+.mnav-btn.active .mnav-dot { transform: scale(1.3); }
+.mnav-label { font-size: 10px; color: var(–text3); white-space: nowrap; transition: color 0.18s; }
 .mnav-btn.active .mnav-label { color: var(–accent); font-weight: 500; }
 
-/* MOBILE OVERLAY */
-#mobile-overlay { display: none; position: fixed; inset: 0; background: var(–bg); z-index: 50; flex-direction: column; }
-#mobile-overlay.open { display: flex; }
-.mo-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(–border); background: var(–surface); }
-.mo-title { font-family: ‘Lora’, serif; font-size: 17px; font-weight: 500; }
-.mo-close { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(–border); background: var(–bg2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(–text2); }
-.mo-body { flex: 1; overflow-y: auto; padding: 20px 18px; display: flex; flex-direction: column; gap: 22px; -webkit-overflow-scrolling: touch; }
-.mo-mood-strip { display: flex; gap: 8px; }
-.mo-mood-btn { flex: 1; padding: 12px 0; border: 1px solid var(–border); border-radius: 10px; background: var(–bg2); cursor: pointer; font-size: 22px; text-align: center; transition: all 0.15s; }
-.mo-mood-btn:active { background: var(–bg3); transform: scale(0.93); }
-.mo-mood-btn.selected { border-color: var(–accent); background: rgba(74,107,90,0.12); }
-
-/* SETTINGS SHEET */
-#settings-panel { display: none; position: fixed; inset: 0; background: rgba(28,26,23,0.4); z-index: 200; align-items: flex-end; justify-content: center; }
-#settings-panel.open { display: flex; }
-.settings-sheet { background: var(–surface); border-radius: 20px 20px 0 0; width: 100%; max-width: 500px; padding: 24px 22px 32px; }
-@supports (padding-bottom: env(safe-area-inset-bottom)) { .settings-sheet { padding-bottom: max(32px, env(safe-area-inset-bottom)); } }
-.st-title { font-family: ‘Lora’, serif; font-size: 18px; font-weight: 500; margin-bottom: 5px; }
-.st-sub { font-size: 12px; color: var(–text3); margin-bottom: 18px; line-height: 1.6; }
-.st-label { font-size: 12px; color: var(–text2); margin-bottom: 5px; font-weight: 500; }
-.st-input { width: 100%; padding: 11px 13px; border: 1px solid var(–border); border-radius: 9px; font-family: ‘DM Sans’, sans-serif; font-size: 15px; background: var(–bg); color: var(–text); outline: none; transition: border-color 0.15s; margin-bottom: 11px; -webkit-appearance: none; }
-.st-input:focus { border-color: rgba(74,107,90,0.5); }
-.st-row { display: flex; gap: 8px; margin-top: 4px; }
-.st-btn { flex: 1; padding: 11px; border-radius: 9px; border: 1px solid var(–border); background: var(–bg2); cursor: pointer; font-family: ‘DM Sans’, sans-serif; font-size: 13px; font-weight: 500; color: var(–text2); transition: all 0.15s; }
-.st-btn:active { transform: scale(0.97); opacity: 0.85; }
-.st-btn.primary { background: var(–accent); color: white; border-color: transparent; }
-.st-btn.primary:active { background: var(–accent-h); }
-.st-msg { font-size: 12px; margin-top: 9px; min-height: 18px; }
-.st-msg.ok { color: var(–accent); } .st-msg.err { color: var(–coral); }
-.st-divider { border: none; border-top: 1px solid var(–border); margin: 16px 0; }
-.st-section { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(–text3); margin-bottom: 10px; }
-.st-export-row { display: flex; gap: 8px; }
-.st-export-info { font-size: 12px; color: var(–text3); line-height: 1.6; margin-bottom: 12px; }
-.st-import-drop {
-border: 1.5px dashed var(–border); border-radius: 10px; padding: 16px;
-text-align: center; font-size: 13px; color: var(–text3); cursor: pointer;
-transition: all 0.15s; background: var(–bg); margin-bottom: 8px;
+/* ── MOBILE OVERLAY (More panel) ── */
+#mobile-overlay {
+display: none; position: fixed; inset: 0; background: var(–bg);
+z-index: 50; flex-direction: column;
+transform: translateX(100%); transition: transform 0.3s var(–ease);
 }
-.st-import-drop:hover, .st-import-drop.drag-over { border-color: var(–accent); background: rgba(74,107,90,0.05); color: var(–accent); }
-.st-import-drop input { display: none; }
+#mobile-overlay.open { display: flex; transform: translateX(0); }
+.mo-header {
+display: flex; align-items: center; justify-content: space-between;
+padding: 16px 18px; border-bottom: 1px solid var(–border); background: var(–surface);
+}
+.mo-title { font-family: ‘Lora’, serif; font-size: 17px; font-weight: 500; }
+.mo-close {
+width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(–border);
+background: var(–bg2); cursor: pointer; display: flex; align-items: center;
+justify-content: center; font-size: 16px; color: var(–text2);
+transition: background 0.18s, transform 0.12s;
+}
+.mo-close:active { background: var(–bg3); transform: scale(0.9); }
+.mo-body {
+flex: 1; overflow-y: auto; padding: 20px 18px;
+display: flex; flex-direction: column; gap: 22px; -webkit-overflow-scrolling: touch;
+}
+.mo-mood-strip { display: flex; gap: 8px; }
+.mo-mood-btn {
+flex: 1; padding: 12px 0; border: 1px solid var(–border); border-radius: 10px;
+background: var(–bg2); cursor: pointer; font-size: 22px; text-align: center;
+transition: background 0.18s var(–ease), transform 0.12s var(–ease), border-color 0.18s;
+}
+.mo-mood-btn:active { background: var(–bg3) !important; transform: scale(0.88) !important; }
+.mo-mood-btn.selected { border-color: var(–accent); background: rgba(74,107,90,0.13); }
+
+/* ── SETTINGS PAGE (full-screen, not overlay) ── */
+#settings-page {
+display: none; position: fixed; inset: 0; background: var(–bg);
+z-index: 80; flex-direction: column;
+animation: slideUp 0.3s var(–ease) both;
+}
+@keyframes slideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+#settings-page.open { display: flex; }
+.sp-header {
+display: flex; align-items: center; gap: 12px;
+padding: 14px 18px; background: var(–surface);
+border-bottom: 1px solid var(–border); flex-shrink: 0;
+}
+.sp-back {
+width: 32px; height: 32px; border-radius: 9px; border: 1px solid var(–border);
+background: var(–bg2); cursor: pointer; display: flex; align-items: center;
+justify-content: center; color: var(–text2); font-size: 18px; line-height: 1;
+transition: background 0.18s, transform 0.12s;
+}
+.sp-back:active { background: var(–bg3); transform: scale(0.9); }
+.sp-title { font-family: ‘Lora’, serif; font-size: 17px; font-weight: 500; }
+.sp-body {
+flex: 1; overflow-y: auto; padding: 22px 18px;
+display: flex; flex-direction: column; gap: 0;
+-webkit-overflow-scrolling: touch;
+}
+.sp-section { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(–text3); margin: 18px 0 10px; }
+.sp-section:first-child { margin-top: 0; }
+.sp-label { font-size: 12px; color: var(–text2); margin-bottom: 5px; font-weight: 500; }
+.sp-input {
+width: 100%; padding: 12px 13px; border: 1px solid var(–border); border-radius: 10px;
+font-family: ‘DM Sans’, sans-serif; font-size: 15px; background: var(–bg2);
+color: var(–text); outline: none; transition: border-color 0.2s, background 0.2s;
+margin-bottom: 11px; -webkit-appearance: none;
+}
+.sp-input:focus { border-color: rgba(74,107,90,0.5); background: var(–surface); }
+.sp-row { display: flex; gap: 8px; margin-bottom: 6px; }
+.sp-btn {
+flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(–border);
+background: var(–bg2); cursor: pointer; font-family: ‘DM Sans’, sans-serif;
+font-size: 13px; font-weight: 500; color: var(–text2);
+transition: background 0.18s var(–ease), transform 0.12s var(–ease), color 0.18s;
+}
+.sp-btn:active { transform: scale(0.96) !important; background: var(–bg3) !important; }
+.sp-btn.primary { background: var(–accent); color: white; border-color: transparent; }
+.sp-btn.primary:active { background: var(–accent-h) !important; color: white !important; }
+.sp-btn.danger:active { background: rgba(196,99,74,0.15) !important; color: var(–coral) !important; border-color: var(–coral) !important; }
+.sp-msg { font-size: 12px; margin-top: 4px; min-height: 18px; transition: opacity 0.3s; }
+.sp-msg.ok { color: var(–accent); } .sp-msg.err { color: var(–coral); }
+.sp-divider { border: none; border-top: 1px solid var(–border); margin: 6px 0 0; }
+.sp-info { font-size: 12px; color: var(–text3); line-height: 1.65; margin-bottom: 12px; background: var(–bg2); border-radius: 9px; padding: 10px 12px; }
+.sp-drop {
+border: 1.5px dashed var(–border); border-radius: 10px; padding: 18px;
+text-align: center; font-size: 13px; color: var(–text3); cursor: pointer;
+transition: all 0.2s var(–ease); background: var(–bg2); margin-bottom: 8px;
+}
+.sp-drop:active, .sp-drop.drag-over { border-color: var(–accent); background: rgba(74,107,90,0.07); color: var(–accent); }
+.sp-drop input { display: none; }
 </style>
 
 </head>
@@ -223,7 +426,7 @@ transition: all 0.15s; background: var(–bg); margin-bottom: 8px;
     <div class="auth-label">Your first name</div>
     <input class="auth-input" type="text" id="setup-name" placeholder="e.g. Jackson" autocomplete="given-name" oninput="updateWelcome(this.value)">
     <div class="auth-hint">
-      <b>API Key</b> — get yours free at <b>platform.anthropic.com</b> under API Keys. It never leaves your device.
+      <b>API Key</b> — get yours free at <b>platform.anthropic.com</b> → API Keys. It never leaves your device.
     </div>
     <div class="auth-label">Anthropic API Key</div>
     <input class="auth-input" type="password" id="setup-key" placeholder="sk-ant-...">
@@ -240,9 +443,7 @@ transition: all 0.15s; background: var(–bg); margin-bottom: 8px;
 <!-- MAIN APP -->
 
 <div id="app">
-
   <!-- Sidebar (desktop) -->
-
   <div id="sidebar">
     <div class="sb-header">
       <div class="app-name">Your Space</div>
@@ -287,15 +488,21 @@ transition: all 0.15s; background: var(–bg); margin-bottom: 8px;
       </div>
       <div class="mode-badge" id="mode-badge">Ready</div>
       <button class="hdr-gear" onclick="openSettings()">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="2.2"/><path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13M2.8 2.8l1 1M10.2 10.2l1 1M11.2 2.8l-1 1M3.8 10.2l-1 1"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="7" cy="7" r="2.2"/>
+          <path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13M2.8 2.8l1 1M10.2 10.2l1 1M11.2 2.8l-1 1M3.8 10.2l-1 1"/>
+        </svg>
       </button>
     </div>
     <div id="messages"></div>
     <div id="input-area">
       <div class="input-row">
-        <textarea id="user-input" id="input-placeholder" placeholder="Talk to me..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <textarea id="user-input" placeholder="Talk to me..." rows="1"
+          onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
         <button id="send-btn" onclick="sendMessage()">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2 8L14 2L8 14L7 9L2 8Z" fill="white" stroke="white" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <path d="M2 8L14 2L8 14L7 9L2 8Z" fill="white" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
+          </svg>
         </button>
       </div>
       <div class="input-hint">Enter to send · Shift+Enter for new line</div>
@@ -345,10 +552,9 @@ transition: all 0.15s; background: var(–bg); margin-bottom: 8px;
     </div>
     <button class="clear-btn" onclick="clearAll()">Clear all history</button>
   </div>
-
 </div>
 
-<!-- MOBILE OVERLAY -->
+<!-- MOBILE MORE OVERLAY -->
 
 <div id="mobile-overlay">
   <div class="mo-header">
@@ -383,69 +589,78 @@ transition: all 0.15s; background: var(–bg); margin-bottom: 8px;
   </div>
 </div>
 
-<!-- SETTINGS -->
+<!-- SETTINGS PAGE (full-screen, slides in) -->
 
-<div id="settings-panel" onclick="if(event.target===this)closeSettings()">
-  <div class="settings-sheet">
-    <div class="st-title">Settings</div>
-    <div class="st-sub">Everything stored only on this device — never sent anywhere except Anthropic's API.</div>
-    <div class="st-label">Anthropic API Key</div>
-    <input class="st-input" type="password" id="st-key" placeholder="sk-ant-...">
-    <div class="st-label">New password (leave blank to keep current)</div>
-    <input class="st-input" type="password" id="st-pw1" placeholder="New password">
-    <input class="st-input" type="password" id="st-pw2" placeholder="Confirm new password">
-    <div class="st-row">
-      <button class="st-btn" onclick="closeSettings()">Cancel</button>
-      <button class="st-btn primary" onclick="saveSettings()">Save</button>
+<div id="settings-page">
+  <div class="sp-header">
+    <button class="sp-back" onclick="closeSettings()">‹</button>
+    <div class="sp-title">Settings</div>
+  </div>
+  <div class="sp-body">
+    <div class="sp-section">Account</div>
+    <div class="sp-label">Anthropic API Key</div>
+    <input class="sp-input" type="password" id="st-key" placeholder="sk-ant-...">
+    <div class="sp-label">New password <span style="color:var(--text3);font-weight:400">(leave blank to keep current)</span></div>
+    <input class="sp-input" type="password" id="st-pw1" placeholder="New password">
+    <input class="sp-input" type="password" id="st-pw2" placeholder="Confirm new password">
+    <div class="sp-row">
+      <button class="sp-btn" onclick="closeSettings()">Cancel</button>
+      <button class="sp-btn primary" onclick="saveSettings()">Save changes</button>
     </div>
-    <div class="st-msg" id="st-msg"></div>
+    <div class="sp-msg" id="st-msg"></div>
 
 ```
-<hr class="st-divider">
-<div class="st-section">Backup &amp; Restore</div>
-<div class="st-export-info">Export saves your memories, mood history, conversations &amp; streak to a <b>.json</b> file. Import restores from a previous export — memories and mood log are merged, conversations are replaced.</div>
-<div class="st-export-row">
-  <button class="st-btn" style="flex:1" onclick="exportData()">&#8659; Export backup</button>
-  <button class="st-btn" style="flex:1" onclick="document.getElementById('import-file').click()">&#8657; Import backup</button>
+<div class="sp-section">Backup &amp; Restore</div>
+<div class="sp-info">
+  Export saves your memories, mood history, conversations &amp; streak to a <b>.json</b> file you can keep anywhere.
+  Import merges memories and mood history, and replaces conversations.
 </div>
-<div class="st-import-drop" id="import-drop"
+<div class="sp-row">
+  <button class="sp-btn" onclick="exportData()">⬇ Export backup</button>
+  <button class="sp-btn" onclick="document.getElementById('import-file').click()">⬆ Import backup</button>
+</div>
+<div class="sp-drop" id="sp-drop"
   ondragover="event.preventDefault();this.classList.add('drag-over')"
   ondragleave="this.classList.remove('drag-over')"
   ondrop="handleImportDrop(event)">
-  or drop a backup file here
+  or drop a .json backup file here
   <input type="file" id="import-file" accept=".json" onchange="handleImportFile(event)">
 </div>
-<div class="st-msg" id="import-msg"></div>
+<div class="sp-msg" id="import-msg"></div>
+
+<div class="sp-section">Danger Zone</div>
+<div class="sp-row">
+  <button class="sp-btn danger" onclick="clearAll()">Clear all data</button>
+</div>
 ```
 
   </div>
 </div>
 
 <script>
-// ── CRYPTO / AUTH ─────────────────────────────────────────────────────────────
-async function hashPw(pw) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw + 'jcbt_x9z2'));
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+async function hashPw(pw){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pw+'jcbt_x9z2'));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-function ls(k,v){ if(v===undefined){try{const r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch(e){return null;}} try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
+function ls(k,v){
+  if(v===undefined){try{const r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch(e){return null;}}
+  try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}
+}
 
-let apiKey='';
-let userName='';
+let apiKey='', userName='';
 
 function updateWelcome(val){
   const n=val.trim();
-  document.getElementById('setup-logo').textContent = n ? 'Welcome, '+n+'.' : 'Welcome.';
+  document.getElementById('setup-logo').textContent=n?'Welcome, '+n+'.':'Welcome.';
 }
-
 async function unlock(){
   const pw=document.getElementById('lock-pw').value; if(!pw)return;
   const stored=ls('jcbt_pwhash');
   if(!stored){showSetup();return;}
   const h=await hashPw(pw);
   if(h!==stored){document.getElementById('lock-err').textContent='Wrong password.';return;}
-  apiKey=ls('jcbt_apikey')||'';
-  userName=ls('jcbt_username')||'friend';
-  launchApp();
+  apiKey=ls('jcbt_apikey')||''; userName=ls('jcbt_username')||'friend'; launchApp();
 }
 async function doSetup(){
   const name=document.getElementById('setup-name').value.trim();
@@ -454,7 +669,7 @@ async function doSetup(){
   const pw2=document.getElementById('setup-pw2').value;
   const err=document.getElementById('setup-err');
   if(!name){err.textContent='Please enter your first name.';return;}
-  if(!key.startsWith('sk-ant-')&&key){err.textContent='API key should start with sk-ant-';return;}
+  if(key&&!key.startsWith('sk-ant-')){err.textContent='API key should start with sk-ant-';return;}
   if(pw1.length<4){err.textContent='Password must be at least 4 characters.';return;}
   if(pw1!==pw2){err.textContent="Passwords don't match.";return;}
   const h=await hashPw(pw1);
@@ -463,46 +678,29 @@ async function doSetup(){
 }
 function showSetup(){document.getElementById('lock-screen').classList.add('hidden');document.getElementById('setup-screen').classList.remove('hidden');}
 function showLock(){document.getElementById('setup-screen').classList.add('hidden');document.getElementById('lock-screen').classList.remove('hidden');}
-
-function openSettings(){document.getElementById('st-key').value=ls('jcbt_apikey')||'';document.getElementById('st-pw1').value='';document.getElementById('st-pw2').value='';document.getElementById('st-msg').textContent='';document.getElementById('settings-panel').classList.add('open');}
-function closeSettings(){document.getElementById('settings-panel').classList.remove('open');}
-async function saveSettings(){
-  const key=document.getElementById('st-key').value.trim();
-  const pw1=document.getElementById('st-pw1').value;
-  const pw2=document.getElementById('st-pw2').value;
-  const msg=document.getElementById('st-msg');
-  if(key&&!key.startsWith('sk-ant-')){msg.textContent='Key should start with sk-ant-';msg.className='st-msg err';return;}
-  if(key){ls('jcbt_apikey',key);apiKey=key;}
-  if(pw1||pw2){
-    if(pw1.length<4){msg.textContent='Password too short.';msg.className='st-msg err';return;}
-    if(pw1!==pw2){msg.textContent="Passwords don't match.";msg.className='st-msg err';return;}
-    ls('jcbt_pwhash',await hashPw(pw1));
-  }
-  msg.textContent='Saved!';msg.className='st-msg ok';setTimeout(closeSettings,1000);
-}
-
-window.addEventListener('load',()=>{ if(!ls('jcbt_pwhash'))showSetup(); else{document.getElementById('lock-screen').classList.remove('hidden');} });
-
 function launchApp(){
   document.getElementById('lock-screen').classList.add('hidden');
   document.getElementById('setup-screen').classList.add('hidden');
   document.getElementById('app').classList.add('visible');
-  document.getElementById('sidebar-sub').textContent = 'CBT · ' + userName;
-  document.getElementById('user-input').placeholder = 'Talk to me, ' + userName + '...';
-  document.title = 'Your Space — ' + userName;
+  document.getElementById('sidebar-sub').textContent='CBT · '+userName;
+  document.getElementById('user-input').placeholder='Talk to me, '+userName+'...';
+  document.title='Your Space — '+userName;
   loadAll();
 }
+window.addEventListener('load',()=>{
+  if(!ls('jcbt_pwhash'))showSetup();
+  else document.getElementById('lock-screen').classList.remove('hidden');
+});
 
 // ── BOT CONFIGS ───────────────────────────────────────────────────────────────
 function getBots(){
-  const n = userName || 'you';
-  const his = 'their'; // gender-neutral
+  const n=userName||'you';
   return {
-  orchestrator:{name:'Main',desc:'Your guide',color:'#4a6b5a',initial:'M',system:`You are ${n}'s personal CBT companion. ${n} is the only person who uses this app. Their name is ${n}.
+    orchestrator:{name:'Main',desc:'Your guide',color:'#4a6b5a',initial:'M',system:`You are ${n}'s personal CBT companion. ${n} is the only person who uses this app. Their name is ${n}.
 
 PERSONALITY: Warm, calm, utterly unshakeable. No matter what ${n} brings — a breakdown, dark thoughts, frustration, a boring day — you don't flinch, don't get clinical and cold. You speak like a real perceptive person, not a chatbot.
 
-TONE: Conversational and warm. Natural language, contractions, short sentences when the moment calls for it. Never bullet points or numbered lists — flowing natural prose. Don't start with "Absolutely!", "Of course!", "Great question!" or hollow affirmations. Use ${n}'s name occasionally but naturally — not in every message.
+TONE: Conversational and warm. Natural language, contractions, short sentences when the moment calls for it. Never bullet points or numbered lists — flowing natural prose. Don't start with "Absolutely!", "Of course!", "Great question!" or hollow affirmations. Use ${n}'s name occasionally but naturally.
 
 THREE MODES — shift fluidly:
 1. THERAPIST MODE: Structured CBT — thought records, cognitive restructuring, worry management, behavioral activation. Rigorous but warm.
@@ -511,7 +709,7 @@ THREE MODES — shift fluidly:
 
 CRITICAL — THE CHECK-IN: When ${n} shares something difficult WITHOUT explicitly asking for CBT help, ALWAYS gently check in. "Do you want to just talk this through, or would it help to actually work through it together?" Never assume they want an exercise.
 
-MOOD AWARENESS: Use ${n}'s memory and mood history. If ${his} tone seems quieter, sharper, or more withdrawn than usual, gently notice — "You seem a little quieter than usual today — how are you actually doing?"
+MOOD AWARENESS: Use ${n}'s memory and mood history. If their tone seems quieter, sharper, or more withdrawn than usual, gently notice — "You seem a little quieter than usual today — how are you actually doing?"
 
 SPECIALIST ROUTING: When appropriate, suggest a specialist — always ask first:
 - Thought work: rumination, self-critical thoughts, cognitive distortions
@@ -519,45 +717,45 @@ SPECIALIST ROUTING: When appropriate, suggest a specialist — always ask first:
 - Activation: low motivation, avoidance, depression-related inactivity
 
 MEMORY: Use ${n}'s history. Reference things they've mentioned before. Don't make them repeat themselves.
-NEVER: Use clinical jargon without explaining. Give unsolicited advice when venting. Be chipper or performatively positive. Use bullet points.`},
-  thought:{name:'Thought work',desc:'Cognitive restructuring',color:'#5b8c7a',initial:'T',system:`You are ${n}'s Thought Challenger — CBT specialist in cognitive restructuring. ${n} is the only user.
+NEVER: Clinical jargon without explaining. Unsolicited advice when venting. Chipper or performatively positive tone. Bullet points.`},
+    thought:{name:'Thought work',desc:'Cognitive restructuring',color:'#5b8c7a',initial:'T',system:`You are ${n}'s Thought Challenger — CBT specialist in cognitive restructuring. ${n} is the only user.
 
-PERSONALITY: Warm, calm, deeply curious. You help when ${his} mind is being unkind. You ask questions that help them see things differently — never tell them what to think.
+PERSONALITY: Warm, calm, deeply curious. You help when their mind is being unkind. You ask questions that help them see things differently — never tell them what to think.
 
 YOUR SPECIALTY — the CBT thought record, warmly, one step at a time:
 1. Situation — what happened, just the facts
 2. Automatic thought — exact first thought, verbatim if possible
 3. Emotion & intensity — what they felt and how strong (0-100)
-4. Cognitive distortions — gently name what you notice: all-or-nothing, catastrophizing, mind-reading, fortune-telling, personalization, should statements
+4. Cognitive distortions — gently name: all-or-nothing, catastrophizing, mind-reading, fortune-telling, personalization, should statements
 5. Evidence for and against the thought
 6. Balanced thought — a more accurate, compassionate alternative
 7. Re-rate the emotion — how do they feel now?
 
-APPROACH: Never rush. One step at a time. If not ready for a full record, just explore conversationally. The structure serves ${n}. Always check what they need first.
+APPROACH: Never rush. One step at a time. If not ready for a full record, just explore conversationally. Always check what they need first.
 TONE: Natural flowing prose. No bullet points. Warm and genuinely curious.`},
-  anxiety:{name:'Anxiety',desc:'Worry management',color:'#c4634a',initial:'A',system:`You are ${n}'s Anxiety Coach — CBT specialist in worry management and anxiety. ${n} is the only user.
+    anxiety:{name:'Anxiety',desc:'Worry management',color:'#c4634a',initial:'A',system:`You are ${n}'s Anxiety Coach — CBT specialist in worry management. ${n} is the only user.
 
-PERSONALITY: Warm, grounding, steady. When ${n} is anxious or spiraling, you are the anchor. Never minimize and never amplify. Help them find solid ground.
+PERSONALITY: Warm, grounding, steady. When ${n} is anxious or spiraling, you are the anchor. Never minimize and never amplify.
 
-YOUR TOOLKIT:
+TOOLKIT:
 WORRY TREE: Actionable now? Yes → small concrete plan. No → worry postponement.
 WORRY POSTPONEMENT: "Let's put that worry in a box and come back to it at a specific time."
-GROUNDING (5-4-3-2-1): 5 things you see, 4 you touch, 3 you hear, 2 you smell, 1 you taste.
+GROUNDING (5-4-3-2-1): 5 things you see, 4 touch, 3 hear, 2 smell, 1 taste.
 DECATASTROPHIZING: "What's the worst that could realistically happen? And if it did — could you handle it?"
-EXPOSURE AWARENESS: If avoidance is a pattern, gently name it and explore one small step.
+EXPOSURE AWARENESS: Name avoidance gently and explore one small step.
 
-APPROACH: First, meet them where they are. "That sounds really overwhelming. Tell me what's going on." Then offer a tool if helpful — and ask first.
+APPROACH: First meet them where they are. Then offer a tool only if helpful — and ask first.
 TONE: Natural flowing prose. No lists. Grounding and present.`},
-  activation:{name:'Activation',desc:'Motivation & behavior',color:'#c49a3a',initial:'AC',system:`You are ${n}'s Activation Coach — CBT specialist in behavioral activation and motivation. ${n} is the only user.
+    activation:{name:'Activation',desc:'Motivation & behavior',color:'#c49a3a',initial:'AC',system:`You are ${n}'s Activation Coach — CBT specialist in behavioral activation. ${n} is the only user.
 
-PERSONALITY: Warm, encouraging without being a cheerleader. You understand telling someone with low motivation to "just do it" is useless. You meet ${n} where they are.
+PERSONALITY: Warm, encouraging without being a cheerleader. You meet ${n} where they are.
 
-YOUR TOOLKIT:
-ACTIVITY SCHEDULING: Small, meaningful activities tied to ${his} values. One or two things, not a packed schedule.
+TOOLKIT:
+ACTIVITY SCHEDULING: Small, meaningful activities tied to their values.
 MOOD-ACTIVITY CONNECTION: Help them see the link between behavior and mood.
 VALUES CLARIFICATION: "Is there something that used to feel meaningful that you haven't done in a while?"
-GRADED TASK: Break it into the smallest possible first step. "What's just the first five minutes?"
-AVOIDANCE PATTERNS: Name avoidance kindly — "It sounds like that's been getting pushed back. What gets in the way?"
+GRADED TASK: Smallest possible first step. "What's just the first five minutes?"
+AVOIDANCE PATTERNS: Name avoidance kindly — "It sounds like that's been getting pushed back."
 
 APPROACH: Always compassionate about low motivation — never shame it. Find the smallest door in.
 TONE: Natural prose. Warm. No lists. No productivity-bro energy.`}
@@ -572,7 +770,7 @@ let memories=[], moodLog=[], streak=0, isLoading=false;
 // ── DATA ───────────────────────────────────────────────────────────────────────
 function loadAll(){
   memories=ls('jcbt_memories')||[]; moodLog=ls('jcbt_moods')||[]; streak=ls('jcbt_streak')||0;
-  const today=new Date().toDateString(), lastDay=ls('jcbt_last_day'), yest=new Date(Date.now()-86400000).toDateString();
+  const today=new Date().toDateString(),lastDay=ls('jcbt_last_day'),yest=new Date(Date.now()-86400000).toDateString();
   if(lastDay!==today){streak=(lastDay===yest)?streak+1:1;ls('jcbt_last_day',today);ls('jcbt_streak',streak);}
   const todayMood=moodLog.find(m=>new Date(m.date).toDateString()===today);
   if(todayMood){
@@ -585,7 +783,7 @@ function setStreak(n){document.getElementById('streak-d').textContent=n;document
 
 // ── RENDER ─────────────────────────────────────────────────────────────────────
 function renderMsgs(){
-  const el=document.getElementById('messages'), conv=convos[currentBot];
+  const el=document.getElementById('messages'),conv=convos[currentBot];
   if(!conv.length){
     el.innerHTML=`<div class="welcome"><h2>Hey, ${userName}.</h2><p>This is your space. Work through something, vent, do a CBT session, or just talk. I'll follow your lead.</p><div class="starters"><button class="starter" onclick="sendStarter(this.textContent)">I want to work through something on my mind</button><button class="starter" onclick="sendStarter(this.textContent)">I've been feeling anxious lately</button><button class="starter" onclick="sendStarter(this.textContent)">I'm struggling to stay motivated</button><button class="starter" onclick="sendStarter(this.textContent)">I just need to talk</button></div></div>`;
     return;
@@ -596,7 +794,7 @@ function msgHTML(m){
   const cfg=getBots()[currentBot];
   if(m.type==='mode-check') return `<div class="mode-check"><div class="mode-check-text">${m.content}</div><div class="mode-check-btns"><button class="mode-check-btn" onclick="respondMode('support')">Just talk</button><button class="mode-check-btn" onclick="respondMode('therapist')">Work through it</button><button class="mode-check-btn" onclick="respondMode('friend')">Something else</button></div></div>`;
   const u=m.role==='user';
-  return `<div class="msg ${u?'user':'assistant'}"><div class="msg-av" style="background:${u?'#9a948c':cfg.color}">${u?'J':cfg.initial}</div><div class="msg-bub">${m.content.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>')}</div></div>`;
+  return `<div class="msg ${u?'user':'assistant'}"><div class="msg-av" style="background:${u?'#9a948c':cfg.color}">${u?userName[0].toUpperCase():cfg.initial}</div><div class="msg-bub">${m.content.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>')}</div></div>`;
 }
 function renderMem(){
   const h=memories.length?memories.slice(-8).reverse().map((m,i)=>`<div class="mem-item ${i===0?'fresh':''}">${m}</div>`).join(''):'<div class="empty-note">Nothing noted yet.</div>';
@@ -620,7 +818,7 @@ function switchBot(bot){
   renderMsgs();
 }
 function updateBadge(text){
-  const badge=document.getElementById('mode-badge'), l=text.toLowerCase();
+  const badge=document.getElementById('mode-badge'),l=text.toLowerCase();
   let m='';
   if(l.includes('thought record')||l.includes('work through')||l.includes('step'))m='therapist';
   else if(l.includes('i hear you')||l.includes('that sounds')||l.includes('makes sense'))m='support';
@@ -633,25 +831,37 @@ function logMood(btn,score,ctx){
   if(ctx==='d')document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
   else document.querySelectorAll('.mo-mood-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
-  const today=new Date().toDateString(), idx=moodLog.findIndex(m=>new Date(m.date).toDateString()===today);
+  const today=new Date().toDateString(),idx=moodLog.findIndex(m=>new Date(m.date).toDateString()===today);
   if(idx>=0)moodLog[idx].score=score; else moodLog.push({score,date:Date.now()});
   ls('jcbt_moods',moodLog); renderMoodHist();
 }
 
-// ── OVERLAY ────────────────────────────────────────────────────────────────────
-function openOverlay(){document.getElementById('mobile-overlay').classList.add('open');}
-function closeOverlay(){document.getElementById('mobile-overlay').classList.remove('open');}
-
-// ── MEMORY EXTRACTION ──────────────────────────────────────────────────────────
-async function extractMem(userMsg,botReply){
-  if(!apiKey)return;
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:300,system:`Extract 0-2 short memory notes from this therapy exchange for 's CBT app. Focus on: recurring patterns, triggers, things that help them, values, significant events. Return ONLY a JSON array of strings under 12 words each. Example: ["Catastrophizes about work deadlines","Running lifts their mood"]. If nothing to save: []`,messages:[{role:'user',content:`User: "${userMsg}"\nBot: "${botReply}"`}]})});
-    const data=await res.json(), raw=(data.content?.[0]?.text||'[]').replace(/```json|```/g,'').trim();
-    const extracted=JSON.parse(raw);
-    if(Array.isArray(extracted)&&extracted.length){memories.push(...extracted);if(memories.length>40)memories=memories.slice(-40);ls('jcbt_memories',memories);renderMem();}
-  }catch(e){}
+// ── SETTINGS ───────────────────────────────────────────────────────────────────
+function openSettings(){
+  document.getElementById('st-key').value=ls('jcbt_apikey')||'';
+  document.getElementById('st-pw1').value=''; document.getElementById('st-pw2').value='';
+  document.getElementById('st-msg').textContent='';
+  document.getElementById('settings-page').classList.add('open');
 }
+function closeSettings(){ document.getElementById('settings-page').classList.remove('open'); }
+async function saveSettings(){
+  const key=document.getElementById('st-key').value.trim();
+  const pw1=document.getElementById('st-pw1').value,pw2=document.getElementById('st-pw2').value;
+  const msg=document.getElementById('st-msg');
+  if(key&&!key.startsWith('sk-ant-')){msg.textContent='Key should start with sk-ant-';msg.className='sp-msg err';return;}
+  if(key){ls('jcbt_apikey',key);apiKey=key;}
+  if(pw1||pw2){
+    if(pw1.length<4){msg.textContent='Password too short.';msg.className='sp-msg err';return;}
+    if(pw1!==pw2){msg.textContent="Passwords don't match.";msg.className='sp-msg err';return;}
+    ls('jcbt_pwhash',await hashPw(pw1));
+  }
+  msg.textContent='Saved!';msg.className='sp-msg ok';
+  setTimeout(closeSettings,1200);
+}
+
+// ── OVERLAY ────────────────────────────────────────────────────────────────────
+function openOverlay(){ document.getElementById('mobile-overlay').classList.add('open'); }
+function closeOverlay(){ document.getElementById('mobile-overlay').classList.remove('open'); }
 
 // ── API ────────────────────────────────────────────────────────────────────────
 function buildCtx(){
@@ -659,45 +869,122 @@ function buildCtx(){
   if(memories.length||moodLog.length){
     ctx+='\n\n'+userName.toUpperCase()+'\'S MEMORY & HISTORY:';
     if(memories.length)ctx+='\nKey things to remember:\n'+memories.map(m=>`- ${m}`).join('\n');
-    if(moodLog.length){const l={1:'rough',2:'okay',3:'good',4:'great'};ctx+='\nRecent mood: '+moodLog.slice(-7).map(m=>`${new Date(m.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}: ${l[m.score]}`).join(', ');}
+    if(moodLog.length){
+      const l={1:'rough',2:'okay',3:'good',4:'great'};
+      ctx+='\nRecent mood: '+moodLog.slice(-7).map(m=>`${new Date(m.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}: ${l[m.score]}`).join(', ');
+    }
   }
   return ctx;
 }
 async function callAPI(userText){
   if(!apiKey)throw new Error('NO_KEY');
   const bot=getBots()[currentBot];
-  const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1000,system:bot.system+buildCtx(),messages:convos[currentBot].filter(m=>m.role==='user'||m.role==='assistant').slice(-20).map(m=>({role:m.role,content:m.content}))})});
+  const res=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-5',max_tokens:1000,
+      system:bot.system+buildCtx(),
+      messages:convos[currentBot].filter(m=>m.role==='user'||m.role==='assistant').slice(-20).map(m=>({role:m.role,content:m.content}))
+    })
+  });
   const data=await res.json();
   if(data.error)throw new Error(data.error.message);
   return data.content?.[0]?.text||'Something went wrong.';
 }
 
+// ── MEMORY EXTRACTION ──────────────────────────────────────────────────────────
+async function extractMem(userMsg,botReply){
+  if(!apiKey)return;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-5',max_tokens:300,
+        system:`Extract 0-2 short memory notes from this therapy exchange for ${userName}'s CBT app. Focus on: recurring patterns, triggers, things that help them, values, significant events. Return ONLY a JSON array of strings under 12 words each. Example: ["Catastrophizes about work deadlines","Running lifts their mood"]. If nothing to save: []`,
+        messages:[{role:'user',content:`User: "${userMsg}"\nBot: "${botReply}"`}]
+      })
+    });
+    const data=await res.json();
+    const raw=(data.content?.[0]?.text||'[]').replace(/```json|```/g,'').trim();
+    const extracted=JSON.parse(raw);
+    if(Array.isArray(extracted)&&extracted.length){
+      memories.push(...extracted);
+      if(memories.length>40)memories=memories.slice(-40);
+      ls('jcbt_memories',memories); renderMem();
+    }
+  }catch(e){}
+}
+
 // ── MESSAGING ──────────────────────────────────────────────────────────────────
-function addMsg(role,content,type){convos[currentBot].push({role,content,type:type||role});renderMsgs();}
+function addMsg(role,content,type){
+  convos[currentBot].push({role,content,type:type||role}); renderMsgs();
+}
+
 function showTyping(){
-  const cfg=getBots()[currentBot],el=document.getElementById('messages'),d=document.createElement('div');
-  d.className='typing-wrap';d.id='typing-ind';
+  const cfg=getBots()[currentBot];
+  const el=document.getElementById('messages');
+  const d=document.createElement('div');
+  d.className='typing-wrap'; d.id='typing-ind';
   d.innerHTML=`<div class="msg-av" style="background:${cfg.color};width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:white;flex-shrink:0">${cfg.initial}</div><div class="typing-bub"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
-  el.appendChild(d);el.scrollTop=el.scrollHeight;
+  el.appendChild(d); el.scrollTop=el.scrollHeight;
 }
 function removeTyping(){const t=document.getElementById('typing-ind');if(t)t.remove();}
+
+// Streaming text reveal effect
+function streamText(el, text, done){
+  let i=0;
+  const cursor=document.createElement('span');
+  cursor.className='streaming-cursor'; el.appendChild(cursor);
+  const speed=Math.max(6, Math.min(18, Math.round(4000/text.length)));
+  function tick(){
+    if(i<text.length){
+      const chunk=text.slice(0,i+1).replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+      el.innerHTML=chunk; el.appendChild(cursor);
+      const msgs=document.getElementById('messages');
+      msgs.scrollTop=msgs.scrollHeight;
+      i+=Math.ceil(text.length/300); // adaptive speed
+      setTimeout(tick, speed);
+    } else {
+      el.innerHTML=text.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+      if(done)done();
+    }
+  }
+  tick();
+}
 
 async function sendMessage(override){
   const input=document.getElementById('user-input');
   const text=(override!==undefined?override:input.value).trim();
   if(!text||isLoading)return;
-  input.value='';input.style.height='auto';
-  isLoading=true;document.getElementById('send-btn').disabled=true;
-  addMsg('user',text);showTyping();
+  input.value=''; input.style.height='auto';
+  isLoading=true; document.getElementById('send-btn').disabled=true;
+  addMsg('user',text); showTyping();
   try{
     const reply=await callAPI(text);
-    removeTyping();addMsg('assistant',reply);updateBadge(reply);extractMem(text,reply);
+    removeTyping();
+    // Add message shell, then stream text in
+    const cfg=getBots()[currentBot];
+    const msgEl=document.createElement('div');
+    msgEl.className='msg assistant';
+    msgEl.innerHTML=`<div class="msg-av" style="background:${cfg.color}">${cfg.initial}</div><div class="msg-bub" id="stream-bub"></div>`;
+    document.getElementById('messages').appendChild(msgEl);
+    document.getElementById('messages').scrollTop=99999;
+    streamText(document.getElementById('stream-bub'), reply, ()=>{
+      // after streaming, clean up id and store
+      document.getElementById('stream-bub').removeAttribute('id');
+      convos[currentBot].push({role:'assistant',content:reply,type:'assistant'});
+      updateBadge(reply); extractMem(text,reply);
+    });
   }catch(e){
     removeTyping();
-    if(e.message==='NO_KEY')addMsg('assistant',"I need your Anthropic API key to respond. Tap the ⚙️ icon to add it.");
-    else addMsg('assistant',"I'm having a little trouble connecting. Check your API key in Settings and try again.");
+    const errMsg=e.message==='NO_KEY'
+      ?"I need your Anthropic API key to respond. Tap the ⚙️ icon in the header to add it."
+      :"I'm having a little trouble connecting. Check your API key in Settings and try again.";
+    addMsg('assistant',errMsg);
   }
-  isLoading=false;document.getElementById('send-btn').disabled=false;
+  isLoading=false; document.getElementById('send-btn').disabled=false;
 }
 function sendStarter(text){convos[currentBot]=[];sendMessage(text);}
 function respondMode(mode){
@@ -708,116 +995,80 @@ function respondMode(mode){
 function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
 function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,120)+'px';}
 
+// ── CLEAR ──────────────────────────────────────────────────────────────────────
 async function clearAll(){
   if(!confirm('Clear all memory, mood history, and conversations? This cannot be undone.'))return;
   memories=[];moodLog=[];streak=0;convos={orchestrator:[],thought:[],anxiety:[],activation:[]};
   ['jcbt_memories','jcbt_moods','jcbt_streak','jcbt_last_day'].forEach(k=>localStorage.removeItem(k));
   document.querySelectorAll('.mood-btn,.mo-mood-btn').forEach(b=>b.classList.remove('selected'));
-  setStreak(0);renderMem();renderMoodHist();renderMsgs();closeOverlay();
+  setStreak(0);renderMem();renderMoodHist();renderMsgs();closeOverlay();closeSettings();
 }
-</script>
 
-</body>
-</html>
-<script>
 // ── EXPORT ────────────────────────────────────────────────────────────────────
 function exportData(){
-  const payload = {
-    version: 1,
-    exportedAt: new Date().toISOString(),
-    exportedBy: userName,
-    memories: memories,
-    moodLog: moodLog,
-    streak: streak,
-    lastDay: ls('jcbt_last_day') || null,
-    conversations: convos
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const date = new Date().toISOString().slice(0,10);
-  a.href = url; a.download = 'jackson-cbt-backup-' + date + '.json';
-  a.click(); URL.revokeObjectURL(url);
-  const msg = document.getElementById('st-msg');
-  msg.textContent = 'Backup downloaded!'; msg.className = 'st-msg ok';
-  setTimeout(function(){ msg.textContent = ''; }, 3000);
+  try{
+    const payload={
+      version:1, exportedAt:new Date().toISOString(), exportedBy:userName,
+      memories:memories, moodLog:moodLog, streak:streak,
+      lastDay:ls('jcbt_last_day')||null, conversations:convos
+    };
+    const json=JSON.stringify(payload,null,2);
+    const blob=new Blob([json],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url; a.download=(userName||'cbt')+'-backup-'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    const msg=document.getElementById('st-msg');
+    msg.textContent='Backup downloaded!'; msg.className='sp-msg ok';
+    setTimeout(()=>{msg.textContent='';},3000);
+  }catch(err){
+    const msg=document.getElementById('st-msg');
+    msg.textContent='Export failed: '+err.message; msg.className='sp-msg err';
+  }
 }
 
 // ── IMPORT ────────────────────────────────────────────────────────────────────
 function handleImportDrop(e){
-e.preventDefault();
-document.getElementById(‘import-drop’).classList.remove(‘drag-over’);
-var file = e.dataTransfer.files[0];
-if(file) processImportFile(file);
+  e.preventDefault(); document.getElementById('sp-drop').classList.remove('drag-over');
+  if(e.dataTransfer.files[0])processImport(e.dataTransfer.files[0]);
 }
 function handleImportFile(e){
-var file = e.target.files[0];
-if(file) processImportFile(file);
-e.target.value = ‘’;
+  if(e.target.files[0])processImport(e.target.files[0]);
+  e.target.value='';
 }
-function processImportFile(file){
-var imsg = document.getElementById(‘import-msg’);
-if(!file.name.endsWith(’.json’)){
-imsg.textContent = ‘Please select a .json backup file.’;
-imsg.className = ‘st-msg err’; return;
-}
-var reader = new FileReader();
-reader.onload = function(e){
-try {
-var data = JSON.parse(e.target.result);
-if(!data.version || !data.exportedBy){ throw new Error(‘invalid’); }
-var dateLabel = data.exportedAt
-? new Date(data.exportedAt).toLocaleDateString(‘en-US’,{month:‘long’,day:‘numeric’,year:‘numeric’})
-: ‘unknown date’;
-if(!confirm(’Import backup from ’ + dateLabel + ‘?\n\nMemories and mood log will be merged with your current data. Conversations will be replaced.’)) return;
-
-```
-  // Merge memories (deduplicate)
-  var mergedMem = [];
-  var seen = {};
-  memories.concat(data.memories||[]).forEach(function(m){
-    if(!seen[m]){ seen[m]=true; mergedMem.push(m); }
-  });
-  memories = mergedMem.slice(-40);
-  ls('jcbt_memories', memories);
-
-  // Merge mood log (newest entry per day wins)
-  var moodMap = {};
-  moodLog.concat(data.moodLog||[]).forEach(function(m){
-    var day = new Date(m.date).toDateString();
-    if(!moodMap[day] || m.date > moodMap[day].date) moodMap[day] = m;
-  });
-  moodLog = Object.values(moodMap).sort(function(a,b){return a.date-b.date;});
-  ls('jcbt_moods', moodLog);
-
-  // Replace conversations (strip mode-check)
-  if(data.conversations){
-    convos = Object.assign({orchestrator:[],thought:[],anxiety:[],activation:[]}, data.conversations);
-    Object.keys(convos).forEach(function(k){
-      convos[k] = convos[k].filter(function(m){ return m.type !== 'mode-check'; });
-    });
-  }
-
-  // Restore streak if imported one is higher
-  if((data.streak||0) > streak){
-    streak = data.streak;
-    ls('jcbt_streak', streak);
-    if(data.lastDay) ls('jcbt_last_day', data.lastDay);
-    setStreak(streak);
-  }
-
-  renderMem(); renderMoodHist(); renderMsgs();
-  imsg.textContent = 'Backup restored successfully!';
-  imsg.className = 'st-msg ok';
-  setTimeout(function(){ imsg.textContent = ''; }, 3000);
-} catch(err) {
-  imsg.textContent = "Could not read that file. Make sure it's a valid CBT backup file.";
-  imsg.className = 'st-msg err';
-}
-```
-
-};
-reader.readAsText(file);
+function processImport(file){
+  const imsg=document.getElementById('import-msg');
+  if(!file.name.endsWith('.json')){imsg.textContent='Please select a .json backup file.';imsg.className='sp-msg err';return;}
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data.version||!data.memories)throw new Error('invalid');
+      const dateLabel=data.exportedAt?new Date(data.exportedAt).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'unknown date';
+      if(!confirm('Import backup from '+dateLabel+'?\n\nMemories and mood log will be merged. Conversations will be replaced.'))return;
+      // Merge memories
+      const seen={};
+      memories.concat(data.memories||[]).forEach(m=>{if(!seen[m]){seen[m]=true;}});
+      memories=Object.keys(seen).slice(-40); ls('jcbt_memories',memories);
+      // Merge mood (newest per day)
+      const mmap={};
+      moodLog.concat(data.moodLog||[]).forEach(m=>{const d=new Date(m.date).toDateString();if(!mmap[d]||m.date>mmap[d].date)mmap[d]=m;});
+      moodLog=Object.values(mmap).sort((a,b)=>a.date-b.date); ls('jcbt_moods',moodLog);
+      // Replace convos
+      if(data.conversations){
+        convos=Object.assign({orchestrator:[],thought:[],anxiety:[],activation:[]},data.conversations);
+        Object.keys(convos).forEach(k=>{convos[k]=convos[k].filter(m=>m.type!=='mode-check');});
+      }
+      if((data.streak||0)>streak){streak=data.streak;ls('jcbt_streak',streak);if(data.lastDay)ls('jcbt_last_day',data.lastDay);setStreak(streak);}
+      renderMem();renderMoodHist();renderMsgs();
+      imsg.textContent='Backup restored!'; imsg.className='sp-msg ok';
+      setTimeout(()=>{imsg.textContent='';},3000);
+    }catch(err){
+      imsg.textContent="Couldn't read that file. Make sure it's a valid backup."; imsg.className='sp-msg err';
+    }
+  };
+  reader.readAsText(file);
 }
 </script>
 
